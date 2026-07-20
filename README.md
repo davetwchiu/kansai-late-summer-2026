@@ -6,6 +6,7 @@
 
 - `index.html` — 概覽與時間風險
 - `daily.html` — 每日時間軸、交通 buffer、可刪項目
+- `deep-itinerary.html` — 八日主題、觀看方法、節奏與取捨
 - `culture.html` — 文化閱讀線
 - `museums.html` — 入館焦點、最後入場、官方資料
 - `food.html` — 十二個餐段與胃口管理

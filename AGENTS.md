@@ -13,7 +13,7 @@ For every material change:
 6. Repair and re-test. Stop after three no-progress repair cycles and report the exact blocker.
 
 ## Acceptance criteria
-- Six top-level pages remain present: home, daily, culture, museums, food, maps.
+- Seven top-level pages remain present: home, daily, deep itinerary, culture, museums, food, maps.
 - All internal links and fragment links resolve.
 - No reservation numbers, confirmation numbers, names, party-size metadata, or hotel confirmation details are published.
 - Opening hours and temporary closures are dated and linked to official sources.
