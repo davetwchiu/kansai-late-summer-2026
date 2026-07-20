@@ -7,7 +7,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = [
-    'index.html','daily.html','culture.html','museums.html','food.html','maps.html',
+    'index.html','daily.html','deep-itinerary.html','culture.html','museums.html','food.html','maps.html',
     'assets/style.css','assets/site.js','assets/route.svg','data/itinerary.json','AGENTS.md'
 ]
 PRIVATE_PATTERNS = [
@@ -35,8 +35,10 @@ for path in html_files:
     if not soup.find('main'):
         errors.append(f'{path.name}: missing main')
     nav_labels=[a.get_text(strip=True) for a in soup.select('.nav a')]
-    if len(nav_labels) != 6:
-        errors.append(f'{path.name}: expected 6 nav links, got {len(nav_labels)}')
+    if len(nav_labels) != 7:
+        errors.append(f'{path.name}: expected 7 nav links, got {len(nav_labels)}')
+    if '深度行程' not in nav_labels:
+        errors.append(f'{path.name}: missing deep itinerary navigation')
     for pattern in PRIVATE_PATTERNS:
         if pattern.search(text):
             errors.append(f'{path.name}: possible private data matched {pattern.pattern}')
