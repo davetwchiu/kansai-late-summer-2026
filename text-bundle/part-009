@@ -1,0 +1,77 @@
+/nav>
+</body></html>
+<<<END:food.html>>>
+
+<<<FILE:index.html>>>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2026 關西晚夏旅程誌</title>
+<meta name="description" content="大阪作基地，串連奈良、堺、神戶、箕面的八日文化、工藝、清酒與餐飲行程。">
+<link rel="stylesheet" href="assets/style.css">
+<script defer src="assets/site.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要內容</a>
+<header class="site-header"><div class="wrap header-row">
+<a class="brand" href="index.html"><span class="brand-mark">旅</span><span class="brand-copy"><strong>關西晚夏旅程誌</strong><span>Osaka base · 26 Aug–2 Sep 2026</span></span></a>
+<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">選單</button>
+<nav id="primary-nav" class="nav" aria-label="主要導覽"><a aria-current="page" href="index.html">首頁</a><a  href="daily.html">每日行程</a><a  href="deep-itinerary.html">深度行程</a><a  href="culture.html">文化筆記</a><a  href="museums.html">入館筆記</a><a  href="food.html">餐飲</a><a  href="maps.html">地圖</a></nav>
+</div></header>
+<main id="main">
+<section class="hero"><div class="wrap hero-grid"><div>
+<div class="eyebrow">Late summer / Kansai</div>
+<h1>不是八日景點，<br>而是五種地方讀法。</h1>
+<p class="date">2026年8月26日—9月2日</p>
+<p class="lede">這次以大阪作基地，不把關西壓成「京都以外的日遊」。奈良從佛畫進入寺院；堺由茶湯與鍛冶讀一座自治商都；神戶把大工工具和灘酒並看；大阪從町家生活史退回古代佛教；箕面則讓長午餐、山寺和瀑布在同一天慢慢接起來。</p>
+<div class="stat-row"><div class="stat"><strong>8</strong><span>日，不搬酒店</span></div><div class="stat"><strong>5</strong><span>城市／地區</span></div><div class="stat"><strong>12</strong><span>預定餐桌</span></div><div class="stat"><strong>1</strong><span>原則：不為密度犧牲理解</span></div></div>
+</div><div class="hero-art"><img src="assets/route.svg" alt="大阪連接奈良、神戶、堺與箕面的抽象行程路線圖"><div class="hero-note">Museum · craft · sake · table</div></div></div></section>
+<section class="section"><div class="wrap"><div class="section-heading"><div class="label">Editorial premise</div><div><h2>行程的真正主題，是技術如何變成地方性格。</h2><p>佛畫、木工、刃物、鉄炮、清酒、町家、壽司與法餐看似分散，其實都在回答同一個問題：一種技術怎樣被制度、地理、勞動和市場長期磨成地方文化。</p></div></div>
+<div class="editorial-lead"><p>奈良最容易被看成鹿與古寺，但這天的線索其實是「圖像怎樣回到宗教空間」。上午在奈良國立博物館看南都佛畫，下午進東大寺，佛像與佛畫便不再只是美術品，而重新成為儀式、國家工程、僧團和信仰空間的一部分。</p><p>堺和神戶則把「職人」從浪漫標籤拉回生產制度。堺刃物不是一個人由頭做到尾，而是鍛冶、刃付、研磨、柄付等分工；灘酒也不只是名水傳說，而是宮水、寒造、丹波杜氏、海運、江戶市場和近代企業化共同形成。竹中大工道具館再補上一層：工具本身就是把身體判斷保存下來的知識。</p><p>大阪兩天看的是另一種制度。大阪くらしの今昔館把「商都」還原成住居、店面、巷道、季節陳設和鄰里秩序；四天王寺則提醒人，大阪並非只由豐臣、米市和近代商業開始，它在古代已是佛教、外交與城市形成的節點。</p></div>
+<div class="callout"><strong>這個網站的使用方式：</strong>「每日行程」是當日操作表；「深度行程」說明今日為何這樣排、甚麼不能加；「文化筆記」建立背景；「入館筆記」告訴你入門後看甚麼；「餐飲」把餐廳當成地方文本；「地圖」處理臨場交通。</div>
+</div></section>
+<section class="section alt"><div class="wrap"><div class="section-heading"><div class="label">Five readings</div><div><h2>五條主線，不按景點名氣排序。</h2></div></div>
+<div class="grid-3">
+<article class="card"><div class="meta">27 Aug · Nara</div><h3>南都：圖像、寺院與國家佛教</h3><p>由「南都仏画」特展進入東大寺。重點不是辨認多少佛菩薩，而是看奈良的寺院如何保存、重畫、搬移和再解釋神聖圖像。</p><a class="more" href="culture.html#nara">讀奈良文化筆記</a></article>
+<article class="card"><div class="meta">28 Aug · Sakai</div><h3>堺：商人的美學與兵器的工業</h3><p>千利休與鉄炮鍛冶看似相反：一邊是極度節制的茶，一邊是火器生產；但兩者都依賴貿易、信用、材料、分工和成熟的都市市場。</p><a class="more" href="culture.html#sakai">讀堺文化筆記</a></article>
+<article class="card"><div class="meta">30 Aug · Kobe</div><h3>神戶：木與酒的精度</h3><p>上午從鉋、鑿、墨線和榫接看誤差控制；下午從酒米、麴、酛、醪、壓榨和物流看另一套精度。兩者都不靠神秘，而靠可傳承的操作。</p><a class="more" href="culture.html#kobe">讀神戶文化筆記</a></article>
+<article class="card"><div class="meta">31 Aug · Osaka</div><h3>大阪：住居尺度與古代時間</h3><p>今昔館先看人怎樣住在商都；四天王寺再把城市時間向前推一千多年。兩站之間的酒店休息，是讓兩種大阪不互相淹沒。</p><a class="more" href="culture.html#osaka">讀大阪文化筆記</a></article>
+<article class="card"><div class="meta">1 Sep · Minoh</div><h3>箕面：近郊自然不是填空</h3><p>瀧安寺、弁財天信仰、富籤傳統與瀑布，構成大阪人長期使用的近郊山水。午餐後是否走到大滝，由身體而非清單決定。</p><a class="more" href="culture.html#minoh">讀箕面文化筆記</a></article>
+<article class="card"><div class="meta">Across all days</div><h3>餐桌：地方不是產地標籤</h3><p>鰻、壽司、燒鳥、酒 pairing、法餐和意大利料理，不按豪華程度排列，而按它們如何承接當日主題和控制旅程節奏來閱讀。</p><a class="more" href="food.html">讀餐飲導讀</a></article>
+</div></div></section>
+<section class="section"><div class="wrap"><div class="section-heading"><div class="label">Time-sensitive</div><div><h2>四個不能靠記憶處理的時間點。</h2><p>這些不是一般提示，而是會改變整日成敗的硬條件。</p></div></div>
+<div class="notice"><strong>27/8 奈良：</strong>奈良國立博物館的「南都仏画」正在後期展期；佛像館近百件造像容易令上午超時。東大寺博物館只設二十分鐘上限，第一個刪。</div>
+<div class="notice"><strong>28/8 堺：</strong>堺伝匠館當日下午13:30–15:00有包丁研ぎ實演。這正好與行程重疊，但展示室可能因活動局部受影響；重點是看分工與工具，不是只買刀。</div>
+<div class="notice"><strong>30/8 神戶：</strong>竹中大工道具館「一脚展＋2026」9月1日才開始，30日只能看常設展；這不是缺憾，常設展本身才是理解日本大工技術的主體。</div>
+<div class="notice"><strong>31/8 大阪：</strong>大阪くらしの今昔館翌日起因大型更新工程休館；當日也是五井金水「粉本」企畫展和夏祭陳設最後一天。10:00開門即入，不能改成下午補看。</div>
+</div></section>
+<section class="section alt"><div class="wrap"><div class="section-heading"><div class="label">Read before departure</div><div><h2>上機前不必讀完，但值得先讀三頁。</h2></div></div><div class="grid-3">
+<article class="card"><h3>先讀深度行程</h3><p>八天逐日說明主題、閱讀方法、取捨和「不要臨時加」。它是整個網站的判斷中樞。</p><a class="more" href="deep-itinerary.html">開始閱讀</a></article>
+<article class="card"><h3>再讀文化筆記</h3><p>由制度、技術、城市史和地理建立背景。不是百科全書，而是專為這條路線寫的觀看框架。</p><a class="more" href="culture.html">開始閱讀</a></article>
+<article class="card"><h3>當日再開入館筆記</h3><p>入門前只需看三件事：館內結構、先看甚麼、何時離開。避免到場才被展板牽着走。</p><a class="more" href="museums.html">開始閱讀</a></article>
+</div></div></section>
+</main><footer class="footer"><div class="wrap footer-grid"><div><strong>2026 關西晚夏旅程誌</strong><br>網站不公開訂位編號、姓名或酒店確認資料；開館、交通與菜單以出發前官方公告為準。</div><div class="updated">資料最後核對：2026-07-20</div></div></footer>
+<nav class="mobile-tools" aria-label="手機捷徑"><a href="daily.html">每日</a><a href="deep-itinerary.html">深度</a><a href="maps.html">地圖</a></nav>
+</body></html>
+<<<END:index.html>>>
+
+<<<FILE:maps.html>>>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>地圖與動線｜2026 關西晚夏</title>
+<meta name="description" content="八日逐日Google Maps路線、動線邏輯、交通替代與酷熱雨天備案。">
+<link rel="stylesheet" href="assets/style.css">
+<script defer src="assets/site.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要內容</a>
+<header class="site-header"><div class="wrap header-row">
+<a class="brand" href="index.html"><span class="brand-mark">旅</span><span class="brand-copy"><strong>關西晚夏旅程誌</strong><span>Osaka base · 26 Aug–2 Sep 2026</span></span></a>
+<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">選單</button>
+<nav id="primary-nav" class="nav" aria-label="主要導覽"><a  href="index.html">首頁</a><a  href="daily.html">每日行程</a><a  href="deep-itinerary.html">深度行程</a><a  href="culture.html">文化筆記</a><a  href="museums.html">入館筆記</a><a  href="food.html">餐飲</a><a aria-current="page" href="maps.html">地圖</a></nav>
+</div></header><section class="page-hero"><div class="wrap"><div class="eyebrow">Routes and buffers</div><h1>地圖</h1><p>地圖不是把地點連起來而已；它要說明為何這個次序合理，以及在哪裡值得花錢換體力。</p></div></section><main id="main"><section class="section"><div class="wrap"><section class="
