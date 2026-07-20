@@ -1,0 +1,204 @@
+
+<<<FILE:.github/workflows/site.yml>>>
+name: Validate and deploy site
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Install validator dependency
+        run: python -m pip install --disable-pip-version-check beautifulsoup4
+      - name: Validate pages, links, data and privacy
+        run: python scripts/validate_site.py
+
+  deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: validate
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v6
+      - name: Upload static site
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: .
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
+<<<END:.github/workflows/site.yml>>>
+
+<<<FILE:.nojekyll>>>
+
+<<<END:.nojekyll>>>
+
+<<<FILE:AGENTS.md>>>
+# AGENTS.md
+
+## Purpose
+Maintain the static 2026 Kansai late-summer itinerary site as a detailed, self-sufficient cultural travel guide without exposing private booking data.
+
+## Controlled execution loop
+For every material change:
+1. Inspect the current pages, `data/itinerary.json`, and relevant official sources.
+2. State a short plan and machine-checkable completion criteria.
+3. Implement the smallest coherent change.
+4. Run `python3 scripts/validate_site.py`.
+5. Review the diff for factual, privacy, mobile-layout, narrative-depth, and navigation errors.
+6. Repair and re-test. Stop after three no-progress repair cycles and report the exact blocker.
+
+## Acceptance criteria
+- Seven top-level pages remain present: home, daily, deep itinerary, culture, museums, food, maps.
+- All internal links and fragment links resolve.
+- No reservation numbers, confirmation numbers, guest names, party-size metadata, or hotel confirmation details are published.
+- Opening hours, temporary closures, and dated exhibitions link to official sources.
+- Each major cultural day has historical context, a practical viewing method, and an explicit trade-off rule.
+- Mobile navigation remains usable at 760 px and below.
+- `data/itinerary.json` contains exactly eight trip days.
+
+## Content rules
+- Traditional Chinese is the primary language; preserve Japanese venue names where useful.
+- Do not turn cultural notes into generic encyclopedia summaries; connect background to this exact route.
+- Do not add observation decks or skyline/night-view stops unless there is a specific cultural or architectural reason.
+- Treat restaurant reservations, museum closing times, transport buffers, and rest blocks as hard constraints.
+- Prefer official sources. Clearly mark interpretation as interpretation and avoid inventing restaurant or chef claims.
+<<<END:AGENTS.md>>>
+
+<<<FILE:README.md>>>
+# 2026 關西晚夏旅程誌
+
+大阪作基地的 2026-08-26 至 2026-09-02 靜態多頁深度旅程網站，涵蓋大阪、奈良、堺、神戶及箕面。
+
+## Pages
+
+- `index.html` — 編輯式旅程導讀與五條閱讀主線
+- `daily.html` — 每日時間軸、核心、刪除線與延伸連結
+- `deep-itinerary.html` — 八日逐日讀法、節奏與「不要臨時加」
+- `culture.html` — 奈良、堺、神戶、灘酒、大阪、箕面長篇文化筆記
+- `museums.html` — 館內觀看順序、可略過內容、離館線與官方資料
+- `food.html` — 十二個餐段的技術、地方脈絡與餐桌讀法
+- `maps.html` — 每日 Google Maps 路線、交通替代與天氣備案
+
+## Validation
+
+```bash
+python3 scripts/validate_site.py
+```
+
+Validator checks seven pages, navigation, internal links and fragments, eight-day data, and private booking patterns.
+
+## Privacy
+
+The public site must not contain reservation numbers, confirmation numbers, party-size metadata, guest names, or hotel confirmation details.
+<<<END:README.md>>>
+
+<<<FILE:assets/route.svg>>>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 520" role="img" aria-labelledby="title desc">
+  <title id="title">關西晚夏行程路線意象</title>
+  <desc id="desc">由大阪連接奈良、堺、神戶與箕面的抽象路線圖</desc>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e7c88c"/>
+      <stop offset="1" stop-color="#fff"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#0b202b" flood-opacity=".26"/>
+    </filter>
+  </defs>
+  <rect x="34" y="34" width="552" height="452" rx="34" fill="#214759" stroke="#7fa0ad" stroke-opacity=".45"/>
+  <path d="M135 330 C190 282 245 306 292 254 S395 168 477 189" fill="none" stroke="url(#g)" stroke-width="4" stroke-linecap="round" stroke-dasharray="3 14"/>
+  <path d="M292 254 C334 315 400 350 462 369" fill="none" stroke="#dce7ea" stroke-width="2" stroke-dasharray="8 12"/>
+  <path d="M292 254 C230 205 195 163 154 118" fill="none" stroke="#dce7ea" stroke-width="2" stroke-dasharray="8 12"/>
+  <g filter="url(#shadow)">
+    <circle cx="292" cy="254" r="43" fill="#fffdf8"/>
+    <circle cx="292" cy="254" r="31" fill="#a34531"/>
+    <text x="292" y="260" text-anchor="middle" font-family="serif" font-size="16" fill="white">大阪</text>
+  </g>
+  <g>
+    <circle cx="477" cy="189" r="25" fill="#fffdf8" stroke="#e7c88c" stroke-width="4"/>
+    <text x="477" y="194" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#183746">奈良</text>
+  </g>
+  <g>
+    <circle cx="135" cy="330" r="25" fill="#fffdf8" stroke="#e7c88c" stroke-width="4"/>
+    <text x="135" y="335" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#183746">神戶</text>
+  </g>
+  <g>
+    <circle cx="462" cy="369" r="25" fill="#fffdf8" stroke="#e7c88c" stroke-width="4"/>
+    <text x="462" y="374" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#183746">堺</text>
+  </g>
+  <g>
+    <circle cx="154" cy="118" r="25" fill="#fffdf8" stroke="#e7c88c" stroke-width="4"/>
+    <text x="154" y="123" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#183746">箕面</text>
+  </g>
+  <g fill="#dce7ea" font-family="sans-serif" font-size="12">
+    <text x="265" y="428">26 AUG — 2 SEP 2026</text>
+    <text x="265" y="449" opacity=".72">MUSEUMS · CRAFT · SAKE · TABLE</text>
+  </g>
+  <g stroke="#7fa0ad" stroke-opacity=".45">
+    <path d="M85 86h95M440 96h95M87 426h83M448 442h84"/>
+  </g>
+</svg>
+<<<END:assets/route.svg>>>
+
+<<<FILE:assets/site.js>>>
+(() => {
+  const toggle = document.querySelector('.nav-toggle');
+  const nav = document.querySelector('.nav');
+  if (toggle && nav) {
+    toggle.addEventListener('click', () => {
+      const open = nav.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', String(open));
+    });
+  }
+
+  document.querySelectorAll('[data-copy]').forEach((button) => {
+    button.addEventListener('click', async () => {
+      const text = button.getAttribute('data-copy');
+      try {
+        await navigator.clipboard.writeText(text);
+        const original = button.textContent;
+        button.textContent = '已複製';
+        setTimeout(() => { button.textContent = original; }, 1200);
+      } catch (_) {
+        window.prompt('請複製以下地址：', text);
+      }
+    });
+  });
+})();
+<<<END:assets/site.js>>>
+
+<<<FILE:assets/style.css>>>
+:root{
+  --paper:#f4f0e8;
+  --paper-2:#ebe4d8;
+  --card:#fffdf8;
+  --ink:#1f292d;
+  --muted:#647075;
+  --line:#d3ccbf;
+  --navy
