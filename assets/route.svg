@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 520" role="img" aria-labelledby="title desc">
+  <title id="title">關西晚夏行程路線意象</title>
+  <desc id="desc">由大阪連接奈良、堺、神戶與箕面的抽象路線圖</desc>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e7c88c"/>
+      <stop offset="1" stop-color="#fff"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#0b202b" flood-opacity=".26"/>
+    </filter>
+  </defs>
+  <rect x="34" y="34" width="552" height="452" rx="34" fill="#214759" stroke="#7fa0ad" stroke-opacity=".45"/>
+  <path d="M135 330 C190 282 245 306 292 254 S395 168 477 189" fill="none" stroke="url(#g)" stroke-width="4" stroke-linecap="round" stroke-dasharray="3 14"/>
+  <path d="M292 254 C334 315 400 350 462 369" fill="none" stroke="#dce7ea" stroke-width="2" stroke-dasharray="8 12"/>
+  <path d="M292 254 C230 205 195 163 154 118" fill="none" stroke="#dce7ea" stroke-width="2" stroke-dasharray="8 12"/>
+  <g filter="url(#shadow)">
+    <circle cx="292" cy="254" r="43" fill="#fffdf8"/>
+    <circle cx="292" cy="254" r="31" fill="#a34531"/>
+    <text x="292" y="260" text-anchor="middle" font-family="serif" font-size="16" fill="white">大阪</text>
+  </g>
+  <g>
+    <circle cx="477" cy="189" r="25" fill="#fffdf8" stroke="#e7c88c" stroke-width="4"/>
+    <text x="477" y="194" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#183746">奈良</text>
+  </g>
+  <g>
+    <circle cx="135" cy="330" r="25" fill="#fffdf8" stroke="#e7c88c" stroke-width="4"/>
+    <text x="135" y="335" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#183746">神戶</text>
+  </g>
+  <g>
+    <circle cx="462" cy="369" r="25" fill="#fffdf8" stroke="#e7c88c" stroke-width="4"/>
+    <text x="462" y="374" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#183746">堺</text>
+  </g>
+  <g>
+    <circle cx="154" cy="118" r="25" fill="#fffdf8" stroke="#e7c88c" stroke-width="4"/>
+    <text x="154" y="123" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#183746">箕面</text>
+  </g>
+  <g fill="#dce7ea" font-family="sans-serif" font-size="12">
+    <text x="265" y="428">26 AUG — 2 SEP 2026</text>
+    <text x="265" y="449" opacity=".72">MUSEUMS · CRAFT · SAKE · TABLE</text>
+  </g>
+  <g stroke="#7fa0ad" stroke-opacity=".45">
+    <path d="M85 86h95M440 96h95M87 426h83M448 442h84"/>
+  </g>
+</svg>
