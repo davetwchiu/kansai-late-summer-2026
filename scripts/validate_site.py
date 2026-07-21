@@ -16,6 +16,23 @@ PRIVATE_PATTERNS = [
     re.compile(r'25210885'),
     re.compile(r'Party size', re.I),
 ]
+MAP_REQUIRED_LABELS = [
+    '關西國際機場', 'InterContinental Osaka', 'ジュンジーノ',
+    '近鉄奈良駅（往復）', '奈良国立博物館', 'うな菊 奈良本店',
+    '東大寺ミュージアム', '東大寺 南大門', '東大寺 大仏殿',
+    '東大寺 法華堂（三月堂）', '東大寺 二月堂', '依水園・寧楽美術館',
+    '旨い料理・旨い酒 じょうじ', 'さかい利晶の杜', '千利休屋敷跡',
+    '大道筋（旧紀州街道）', '宿院停留場', '弥助',
+    '堺伝匠館／堺刃物ミュージアム CUT', '妙国寺前停留場',
+    '鉄炮鍛冶屋敷', '高須神社停留場', '七道駅',
+    'しまなみふれんち Murakami', 'ritmicita', '炭火いわ田',
+    '竹中大工道具館', '三宮駅', '中山手通', 'トンカツとワイン 日月',
+    '白鶴酒造資料館', '菊正宗酒造記念館', '神戸酒心館 東明蔵',
+    'エスピス', '大阪くらしの今昔館', '天神橋筋商店街',
+    '四天王寺', '口縄坂', '下寺町', '鮨まさる',
+    'Osteria Shoru', '桜井駅', '箕面駅', '箕面滝道',
+    '瀧安寺', '箕面大滝', '黒杉',
+]
 errors=[]
 
 for rel in REQUIRED:
@@ -72,9 +89,29 @@ try:
 except Exception as exc:
     errors.append(f'data/itinerary.json invalid: {exc}')
 
+maps_path=ROOT/'maps.html'
+if maps_path.exists():
+    maps_soup=BeautifulSoup(maps_path.read_text(encoding='utf-8'),'html.parser')
+    cards=maps_soup.select('.map-card')
+    point_links=maps_soup.select('.route-steps a')
+    backup_routes=maps_soup.select('.map-actions a[href*="google.com/maps/dir"]')
+    if len(cards) != 8:
+        errors.append(f'maps.html: expected 8 day cards, got {len(cards)}')
+    if len(point_links) != 52:
+        errors.append(f'maps.html: expected 52 individual map links, got {len(point_links)}')
+    if len(backup_routes) != 8:
+        errors.append(f'maps.html: expected 8 backup route links, got {len(backup_routes)}')
+    map_labels={a.get_text(' ',strip=True).replace('↗','').strip() for a in point_links}
+    for label in MAP_REQUIRED_LABELS:
+        if label not in map_labels:
+            errors.append(f'maps.html: missing required point: {label}')
+    for link in point_links + backup_routes:
+        if link.get('target') != '_blank' or 'noopener' not in (link.get('rel') or []):
+            errors.append(f'maps.html: unsafe external link: {link.get_text(" ",strip=True)}')
+
 if errors:
     print('VALIDATION FAILED')
     for error in errors:
         print(f'- {error}')
     sys.exit(1)
-print(f'VALIDATION PASSED: {len(html_files)} HTML pages, local links and privacy checks OK')
+print(f'VALIDATION PASSED: {len(html_files)} HTML pages, local links, map completeness and privacy checks OK')
