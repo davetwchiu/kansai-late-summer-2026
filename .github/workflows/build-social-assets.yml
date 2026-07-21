@@ -93,13 +93,24 @@ jobs:
           for path in pages:
               text = path.read_text(encoding='utf-8')
               text = re.sub(r'\n?\s*<!-- social-meta:start -->.*?<!-- social-meta:end -->\s*', '\n', text, flags=re.S)
-              title_match = re.search(r'<title>(.*?)</title>', text, flags=re.S)
-              desc_match = re.search(r'<meta\s+name="description"\s+content="([^"]*)"\s*/?>', text)
-              if not title_match or not desc_match:
+              title_match = re.search(r'<title>(.*?)</title>', text, flags=re.I | re.S)
+              desc_tag_match = re.search(
+                  r'<meta\b(?=[^>]*\bname\s*=\s*["\']description["\'])[^>]*>',
+                  text,
+                  flags=re.I | re.S,
+              )
+              if not title_match or not desc_tag_match:
                   raise SystemExit(f'{path}: title or description missing')
+              content_match = re.search(
+                  r'\bcontent\s*=\s*["\']([^"\']*)["\']',
+                  desc_tag_match.group(0),
+                  flags=re.I | re.S,
+              )
+              if not content_match:
+                  raise SystemExit(f'{path}: description content missing')
 
               title = html.unescape(title_match.group(1).strip())
-              description = html.unescape(desc_match.group(1).strip())
+              description = html.unescape(content_match.group(1).strip())
               page_url = base if path.name == 'index.html' else base + path.name
               block = f'''  <!-- social-meta:start -->
               <meta name="theme-color" content="#183746">
@@ -125,7 +136,7 @@ jobs:
               <meta name="twitter:description" content="{html.escape(description, quote=True)}">
               <meta name="twitter:image" content="{html.escape(image, quote=True)}">
               <!-- social-meta:end -->'''
-              text = text.replace(desc_match.group(0), desc_match.group(0) + '\n' + block, 1)
+              text = text.replace(desc_tag_match.group(0), desc_tag_match.group(0) + '\n' + block, 1)
               path.write_text(text, encoding='utf-8')
           PY
 
