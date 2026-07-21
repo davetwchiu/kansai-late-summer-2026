@@ -115,6 +115,18 @@ for name in ('culture.html', 'deep-itinerary.html'):
         errors.append(f'{name}: missing evidence/comparison/logistics relationship guide')
 if '分類只是一種比較工具' not in food_soup.get_text(' ',strip=True):
     errors.append('food.html: missing restaurant grouping caveat')
+booking_truths = (
+    '季節のおまかせコース', '店主おまかせランチコース', 'Dinner menu saison',
+    '本日のランチおまかせコース', 'スペシャリテコース', 'お寿司のみ', 'おまかせ握り16貫',
+)
+food_text = food_soup.get_text(' ', strip=True)
+for phrase in booking_truths:
+    if phrase not in food_text:
+        errors.append(f'food.html: missing confirmed booking detail: {phrase}')
+if len(food_soup.select('.service-japanese')) != 3:
+    errors.append('food.html: expected Japanese ordering help only at three relevant restaurants')
+if len(food_soup.select('.service-japanese dt')) < 10:
+    errors.append('food.html: insufficient contextual Japanese ordering phrases')
 
 site_js=(ROOT/'assets/site.js').read_text(encoding='utf-8')
 if "main > .section, main > .deep-day" not in site_js or "回頁首 ↑" not in site_js:
