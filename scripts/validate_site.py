@@ -136,6 +136,47 @@ site_js=(ROOT/'assets/site.js').read_text(encoding='utf-8')
 if "main > .section, main > .deep-day" not in site_js or "回頁首 ↑" not in site_js:
     errors.append('assets/site.js: missing per-section back-to-top navigation')
 
+daily_soup=BeautifulSoup((ROOT/'daily.html').read_text(encoding='utf-8'),'html.parser')
+context_links=daily_soup.select('.schedule a.context-link')
+if len(context_links) < 30:
+    errors.append(f'daily.html: expected at least 30 item-level internal links, got {len(context_links)}')
+linked_targets={link.get('href') for link in context_links}
+required_item_targets={
+    'museums.html#nara-museum', 'museums.html#todaiji', 'museums.html#isuien',
+    'museums.html#risho', 'museums.html#cut', 'museums.html#teppo',
+    'museums.html#takenaka', 'museums.html#hakutsuru-detail', 'museums.html#kiku',
+    'museums.html#fukuju', 'museums.html#konjaku', 'museums.html#shitennoji',
+    'culture.html#sakai', 'culture.html#osaka', 'culture.html#minoh',
+    'food.html#junjino', 'food.html#unagiku', 'food.html#joji', 'food.html#yasuke',
+    'food.html#murakami', 'food.html#ritmicita', 'food.html#iwata',
+    'food.html#nichigetsu', 'food.html#espice', 'food.html#masaru',
+    'food.html#shoru', 'food.html#kurosugi',
+}
+for target in sorted(required_item_targets - linked_targets):
+    errors.append(f'daily.html: missing item-level link to {target}')
+
+reciprocal_groups={
+    'food.html': ('.food-feature', 12),
+    'museums.html': ('.museum-feature', 10),
+    'maps.html': ('.map-card', 8),
+    'deep-itinerary.html': ('.deep-day', 8),
+}
+for name, (selector, expected_count) in reciprocal_groups.items():
+    soup=BeautifulSoup((ROOT/name).read_text(encoding='utf-8'),'html.parser')
+    units=soup.select(selector)
+    if len(units) != expected_count:
+        errors.append(f'{name}: expected {expected_count} linked content units, got {len(units)}')
+    for unit in units:
+        unit_id=unit.get('id','without-id')
+        if not unit.select_one('a[href^="daily.html#d"]'):
+            errors.append(f'{name}: #{unit_id} cannot return to its daily itinerary')
+
+culture_soup=BeautifulSoup((ROOT/'culture.html').read_text(encoding='utf-8'),'html.parser')
+for section_id in ('nara','sakai','carpentry','nada','osaka','minoh'):
+    section=culture_soup.select_one(f'#{section_id}')
+    if not section or not section.select_one('a[href^="daily.html#d"]'):
+        errors.append(f'culture.html: #{section_id} cannot return to its daily itinerary')
+
 museums_soup=BeautifulSoup((ROOT/'museums.html').read_text(encoding='utf-8'),'html.parser')
 museum_ids={'nara-museum','todaiji','isuien','risho','cut','teppo','takenaka','hakutsuru','konjaku','shitennoji'}
 if not museum_ids.issubset(ids_by_file.get('museums.html',set())):
