@@ -107,14 +107,18 @@ if len(food_soup.select('.dining-thread')) != 4:
 if 'id="regional-network"' not in (ROOT/'culture.html').read_text(encoding='utf-8'):
     errors.append('culture.html: missing regional history network')
 
-for name in ('culture.html', 'deep-itinerary.html'):
+guide_expectations = {
+    'culture.html': {'古代宗教', '海運市場', '近代私鐵'},
+    'deep-itinerary.html': {'硬節點', '核心現場', '先刪項目'},
+}
+for name, expected_labels in guide_expectations.items():
     soup=BeautifulSoup((ROOT/name).read_text(encoding='utf-8'),'html.parser')
     guide=soup.select_one('.relation-guide')
     labels={item.get_text(' ',strip=True) for item in guide.select('strong')} if guide else set()
-    if labels != {'史料關係', '比較角度', '實際動線'}:
-        errors.append(f'{name}: missing evidence/comparison/logistics relationship guide')
-if '分類只是一種比較工具' not in food_soup.get_text(' ',strip=True):
-    errors.append('food.html: missing restaurant grouping caveat')
+    if labels != expected_labels:
+        errors.append(f'{name}: missing practical history/itinerary guide')
+if '四條餐桌線' not in food_soup.get_text(' ',strip=True):
+    errors.append('food.html: missing dining themes')
 booking_truths = (
     '季節のおまかせコース', '店主おまかせランチコース', 'Dinner menu saison',
     '本日のランチおまかせコース', 'スペシャリテコース', 'お寿司のみ', 'おまかせ握り16貫',
