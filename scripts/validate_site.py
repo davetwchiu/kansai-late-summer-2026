@@ -116,6 +116,19 @@ for name in ('culture.html', 'deep-itinerary.html'):
 if '分類只是一種比較工具' not in food_soup.get_text(' ',strip=True):
     errors.append('food.html: missing restaurant grouping caveat')
 
+site_js=(ROOT/'assets/site.js').read_text(encoding='utf-8')
+if "main > .section, main > .deep-day" not in site_js or "回頁首 ↑" not in site_js:
+    errors.append('assets/site.js: missing per-section back-to-top navigation')
+
+museums_soup=BeautifulSoup((ROOT/'museums.html').read_text(encoding='utf-8'),'html.parser')
+museum_ids={'nara-museum','todaiji','isuien','risho','cut','teppo','takenaka','hakutsuru','konjaku','shitennoji'}
+if not museum_ids.issubset(ids_by_file.get('museums.html',set())):
+    errors.append('museums.html: missing one or more required visit guides')
+if len(museums_soup.select('.museum-role')) != 10:
+    errors.append(f'museums.html: expected 10 explicit visit rationales, got {len(museums_soup.select(".museum-role"))}')
+if len(museums_soup.select('.orientation-grid')) < 5:
+    errors.append('museums.html: insufficient newcomer orientation panels')
+
 try:
     data=json.loads((ROOT/'data/itinerary.json').read_text(encoding='utf-8'))
     if len(data.get('days',[])) != 8:
