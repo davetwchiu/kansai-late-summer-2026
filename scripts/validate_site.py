@@ -8,7 +8,9 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = [
     'index.html','daily.html','deep-itinerary.html','culture.html','museums.html','food.html','maps.html',
-    'assets/style.css','assets/site.js','assets/route.svg','data/itinerary.json','AGENTS.md'
+    'assets/style.css','assets/site.js','assets/route.svg',
+    'assets/images/hero-kansai-editorial.webp','assets/images/culture-layers-editorial.webp',
+    'assets/images/dining-technique-editorial.webp','data/itinerary.json','AGENTS.md'
 ]
 PRIVATE_PATTERNS = [
     re.compile(r'Reservation Number', re.I),
@@ -34,6 +36,7 @@ MAP_REQUIRED_LABELS = [
     '瀧安寺', '箕面大滝', '黒杉',
 ]
 errors=[]
+BANNED_CONTRAST = re.compile(r'不是[^。；]{0,80}而是')
 
 for rel in REQUIRED:
     if not (ROOT/rel).exists():
@@ -82,6 +85,37 @@ for path in html_files:
             if frag not in ids:
                 errors.append(f'{path.name}: missing fragment #{frag} in {target_path.name}')
 
+for name in ('index.html', 'culture.html', 'food.html'):
+    text=(ROOT/name).read_text(encoding='utf-8')
+    if BANNED_CONTRAST.search(text):
+        errors.append(f'{name}: avoid the 不是…而是 contrast construction')
+
+structure_checks = {
+    'index.html': ('.atlas-era', 5, 'historical atlas entries'),
+    'culture.html': ('.culture-place', 5, 'city culture entries'),
+    'food.html': ('.food-feature', 12, 'restaurant features'),
+}
+for name, (selector, expected, label) in structure_checks.items():
+    soup=BeautifulSoup((ROOT/name).read_text(encoding='utf-8'),'html.parser')
+    actual=len(soup.select(selector))
+    if actual != expected:
+        errors.append(f'{name}: expected {expected} {label}, got {actual}')
+
+food_soup=BeautifulSoup((ROOT/'food.html').read_text(encoding='utf-8'),'html.parser')
+if len(food_soup.select('.dining-thread')) != 4:
+    errors.append('food.html: expected four dining culture threads')
+if 'id="regional-network"' not in (ROOT/'culture.html').read_text(encoding='utf-8'):
+    errors.append('culture.html: missing regional history network')
+
+for name in ('culture.html', 'deep-itinerary.html'):
+    soup=BeautifulSoup((ROOT/name).read_text(encoding='utf-8'),'html.parser')
+    guide=soup.select_one('.relation-guide')
+    labels={item.get_text(' ',strip=True) for item in guide.select('strong')} if guide else set()
+    if labels != {'史料關係', '比較角度', '實際動線'}:
+        errors.append(f'{name}: missing evidence/comparison/logistics relationship guide')
+if '分類只是一種比較工具' not in food_soup.get_text(' ',strip=True):
+    errors.append('food.html: missing restaurant grouping caveat')
+
 try:
     data=json.loads((ROOT/'data/itinerary.json').read_text(encoding='utf-8'))
     if len(data.get('days',[])) != 8:
@@ -114,4 +148,4 @@ if errors:
     for error in errors:
         print(f'- {error}')
     sys.exit(1)
-print(f'VALIDATION PASSED: {len(html_files)} HTML pages, local links, map completeness and privacy checks OK')
+print(f'VALIDATION PASSED: {len(html_files)} HTML pages, local links, visual assets, evidence boundaries, cultural depth, dining structure, map completeness and privacy checks OK')

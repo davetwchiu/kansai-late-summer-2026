@@ -4,12 +4,12 @@
 
 ## Pages
 
-- `index.html` — 概覽與時間風險
+- `index.html` — 使用模式、城市史時間軸、八日節奏與時間風險
 - `daily.html` — 每日時間軸、交通 buffer、可刪項目
 - `deep-itinerary.html` — 八日主題、觀看方法、節奏與取捨
-- `culture.html` — 文化閱讀線
+- `culture.html` — 五地城市形成、地域交換網絡、工藝與宗教制度
 - `museums.html` — 入館焦點、最後入場、官方資料
-- `food.html` — 十二個餐段與胃口管理
+- `food.html` — 十二間餐廳、四條餐飲文化線、資料把握與餐桌讀法
 - `maps.html` — 每日 Google Maps 路線入口
 
 ## Local preview
@@ -26,7 +26,7 @@ Open `http://localhost:8000/`.
 python3 scripts/validate_site.py
 ```
 
-The validator checks required files, internal links, fragment links, page structure, eight-day JSON data, and likely private booking data.
+The validator checks required files and visual assets, internal and fragment links, cultural and dining structure, map completeness, eight-day JSON data, house-style rules, and likely private booking data.
 
 ## Privacy
 
