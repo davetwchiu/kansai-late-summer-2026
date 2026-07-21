@@ -22,4 +22,18 @@
     });
   });
 
+  document.body.id = document.body.id || 'top';
+  document.querySelectorAll('main > .section, main > .deep-day').forEach((section) => {
+    const container = section.querySelector(':scope > .wrap') || section;
+    if (container.querySelector(':scope > .back-to-top')) return;
+    const row = document.createElement('p');
+    row.className = 'back-to-top';
+    const link = document.createElement('a');
+    link.href = '#top';
+    link.setAttribute('aria-label', '返回頁首');
+    link.textContent = '回頁首 ↑';
+    row.appendChild(link);
+    container.appendChild(row);
+  });
+
 })();
