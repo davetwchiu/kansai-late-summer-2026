@@ -28,8 +28,9 @@ MAP_REQUIRED_LABELS = [
     '堺伝匠館／堺刃物ミュージアム CUT', '妙国寺前停留場',
     '鉄炮鍛冶屋敷', '高須神社停留場', '七道駅',
     'しまなみふれんち Murakami', 'ritmicita', '炭火いわ田',
-    '竹中大工道具館', '三宮駅', '中山手通', 'トンカツとワイン 日月',
-    '白鶴酒造資料館', '菊正宗酒造記念館', '神戸酒心館 東明蔵',
+    'JR大阪駅', '新神戸駅', '竹中大工道具館', 'トンカツとワイン 日月',
+    '阪神神戸三宮駅', '阪神魚崎駅', '菊正宗酒造記念館',
+    '白鶴酒造資料館', '神戸酒心館', '阪神石屋川駅',
     'エスピス', '大阪くらしの今昔館', '天神橋筋商店街',
     '四天王寺', '口縄坂', '下寺町', '鮨まさる',
     'Osteria Shoru', '桜井駅', '箕面駅', '箕面滝道',
@@ -201,10 +202,10 @@ if maps_path.exists():
     backup_routes=maps_soup.select('.map-actions a[href*="google.com/maps/dir"]')
     if len(cards) != 8:
         errors.append(f'maps.html: expected 8 day cards, got {len(cards)}')
-    if len(point_links) != 52:
-        errors.append(f'maps.html: expected 52 individual map links, got {len(point_links)}')
-    if len(backup_routes) != 8:
-        errors.append(f'maps.html: expected 8 backup route links, got {len(backup_routes)}')
+    if len(point_links) != 56:
+        errors.append(f'maps.html: expected 56 individual map links, got {len(point_links)}')
+    if len(backup_routes) != 9:
+        errors.append(f'maps.html: expected 9 backup route links, got {len(backup_routes)}')
     map_labels={a.get_text(' ',strip=True).replace('↗','').strip() for a in point_links}
     for label in MAP_REQUIRED_LABELS:
         if label not in map_labels:
