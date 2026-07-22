@@ -188,10 +188,10 @@ if len(museums_soup.select('.orientation-grid')) < 5:
     errors.append('museums.html: insufficient newcomer orientation panels')
 if not museums_soup.select_one('#sake-japanese'):
     errors.append('museums.html: missing sake Japanese section')
-if len(museums_soup.select('#sake-japanese .sake-term-groups dt')) < 20:
+if len(museums_soup.select('#sake-japanese .sake-term-groups dt')) < 70:
     errors.append('museums.html: insufficient sake brewing vocabulary')
-if len(museums_soup.select('#sake-japanese .tour-phrases dt')) != 6:
-    errors.append('museums.html: expected six brewery-tour questions')
+if len(museums_soup.select('#sake-japanese .tour-phrases dt')) != 16:
+    errors.append('museums.html: expected six brewery-tour and ten everyday sake questions')
 
 site_text=' '.join((ROOT/name).read_text(encoding='utf-8') for name in ('daily.html','deep-itinerary.html','museums.html','maps.html'))
 for stale in ('09:15出發', '09:15 酒店', '10:15–11:45 · 強烈推薦', '待預約確認', '仍待預約'):
