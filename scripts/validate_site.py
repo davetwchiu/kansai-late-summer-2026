@@ -186,6 +186,17 @@ if len(museums_soup.select('.museum-role')) != 10:
     errors.append(f'museums.html: expected 10 explicit visit rationales, got {len(museums_soup.select(".museum-role"))}')
 if len(museums_soup.select('.orientation-grid')) < 5:
     errors.append('museums.html: insufficient newcomer orientation panels')
+if not museums_soup.select_one('#sake-japanese'):
+    errors.append('museums.html: missing sake Japanese section')
+if len(museums_soup.select('#sake-japanese .sake-term-groups dt')) < 20:
+    errors.append('museums.html: insufficient sake brewing vocabulary')
+if len(museums_soup.select('#sake-japanese .tour-phrases dt')) != 6:
+    errors.append('museums.html: expected six brewery-tour questions')
+
+site_text=' '.join((ROOT/name).read_text(encoding='utf-8') for name in ('daily.html','deep-itinerary.html','museums.html','maps.html'))
+for stale in ('09:15出發', '09:15 酒店', '10:15–11:45 · 強烈推薦', '待預約確認', '仍待預約'):
+    if stale in site_text:
+        errors.append(f'stale 30/8 itinerary text remains: {stale}')
 
 try:
     data=json.loads((ROOT/'data/itinerary.json').read_text(encoding='utf-8'))
