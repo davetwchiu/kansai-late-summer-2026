@@ -109,6 +109,54 @@
     }
   }
 
+  const naraVisit = document.querySelector('#nara-visit');
+  if (naraVisit) {
+    const heading = naraVisit.querySelector('.section-heading');
+    if (heading) {
+      const title = heading.querySelector('h2');
+      const intro = heading.querySelector('p');
+      if (title) title.textContent = '上午建立觀看框架；下午按人流二選一';
+      if (intro) intro.textContent = '奈良國立博物館是固定核心。午餐後約14:00先看東大寺人流：可接受便走東大寺線；團客明顯擠迫便轉依水園／寧樂美術館。兩條線各自完整，當日不需要兩邊走完。';
+
+      if (!heading.parentElement.querySelector('.nara-choice-note')) {
+        const note = document.createElement('div');
+        note.className = 'notice sage nara-choice-note';
+        note.innerHTML = '<strong>14:00現場決策：</strong>A線為東大寺ミュージアム與寺院本體；B線為依水園／寧樂美術館。選定一線後，不再趕往另一線。';
+        heading.insertAdjacentElement('afterend', note);
+      }
+    }
+
+    const naraMuseum = naraVisit.querySelector('#nara-museum');
+    if (naraMuseum) {
+      const meta = naraMuseum.querySelector('.museum-head .meta');
+      if (meta) meta.textContent = '09:30–12:10 · 固定核心';
+      const grid = naraMuseum.querySelector('.decision-grid');
+      if (grid) {
+        grid.innerHTML = '<div><strong>時間分配</strong><span>南都仏画約100分鐘；佛像館約45分鐘；青銅器館約15分鐘</span></div><div><strong>硬離館</strong><span>12:10離館；12:30準時到うな菊</span></div><div><strong>延伸</strong><span><a href="daily.html#d0827">27/8行程</a> · <a href="culture.html#nara">奈良文化線</a> · <a href="deep-itinerary.html#nara">當日取捨</a></span></div>';
+      }
+    }
+
+    const todaiji = naraVisit.querySelector('#todaiji');
+    if (todaiji) {
+      const meta = todaiji.querySelector('.museum-head .meta');
+      if (meta) meta.textContent = 'A線｜14:00–16:15 · 東大寺人流可接受時';
+      const grid = todaiji.querySelector('.decision-grid');
+      if (grid) {
+        grid.innerHTML = '<div><strong>選擇條件</strong><span>14:00到場時人流仍可接受，便完整走東大寺線</span></div><div><strong>路線</strong><span>ミュージアム → 南大門 → 大佛殿 → 法華堂 → 二月堂</span></div><div><strong>離開</strong><span>約16:15開始回近鐵奈良站；不再轉去依水園</span></div>';
+      }
+    }
+
+    const isuien = naraVisit.querySelector('#isuien');
+    if (isuien) {
+      const meta = isuien.querySelector('.museum-head .meta');
+      if (meta) meta.textContent = 'B線｜14:10–15:20 · 東大寺明顯擠迫時';
+      const grid = isuien.querySelector('.decision-grid');
+      if (grid) {
+        grid.innerHTML = '<div><strong>選擇條件</strong><span>東大寺團客明顯擠迫，約14:00立即轉往依水園</span></div><div><strong>路線</strong><span>前園 → 後園 → 寧樂美術館；其後只看東大寺外圍或直接回站</span></div><div><strong>硬時間</strong><span>16:00前入園；選此線後不再進東大寺各付費區</span></div>';
+      }
+    }
+  }
+
   document.body.id = document.body.id || 'top';
   document.querySelectorAll('main > .section, main > .deep-day').forEach((section) => {
     const container = section.querySelector(':scope > .wrap') || section;
