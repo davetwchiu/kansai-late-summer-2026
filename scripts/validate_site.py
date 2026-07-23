@@ -31,8 +31,8 @@ MAP_REQUIRED_LABELS = [
     'JR大阪駅', '新神戸駅', '竹中大工道具館', 'トンカツとワイン 日月',
     '阪神神戸三宮駅', '阪神魚崎駅', '菊正宗酒造記念館',
     '白鶴酒造資料館', '神戸酒心館', '阪神石屋川駅',
-    'エスピス', '大阪くらしの今昔館', '天神橋筋商店街',
-    '四天王寺', '口縄坂', '下寺町', '鮨まさる',
+    'エスピス', '大阪くらしの今昔館', 'alcentro', '南森町駅',
+    '四天王寺', '新世界・通天閣本通', '鮨まさる',
     'Osteria Shoru', '桜井駅', '箕面駅', '箕面滝道',
     '瀧安寺', '箕面大滝', '黒杉',
 ]
@@ -94,7 +94,7 @@ for name in ('index.html', 'culture.html', 'food.html'):
 structure_checks = {
     'index.html': ('.atlas-era', 5, 'historical atlas entries'),
     'culture.html': ('.culture-place', 5, 'city culture entries'),
-    'food.html': ('.food-feature', 12, 'restaurant features'),
+    'food.html': ('.food-feature', 13, 'restaurant features'),
 }
 for name, (selector, expected, label) in structure_checks.items():
     soup=BeautifulSoup((ROOT/name).read_text(encoding='utf-8'),'html.parser')
@@ -151,13 +151,14 @@ required_item_targets={
     'food.html#junjino', 'food.html#unagiku', 'food.html#joji', 'food.html#yasuke',
     'food.html#murakami', 'food.html#ritmicita', 'food.html#iwata',
     'food.html#nichigetsu', 'food.html#espice', 'food.html#masaru',
+    'food.html#alcentro',
     'food.html#shoru', 'food.html#kurosugi',
 }
 for target in sorted(required_item_targets - linked_targets):
     errors.append(f'daily.html: missing item-level link to {target}')
 
 reciprocal_groups={
-    'food.html': ('.food-feature', 12),
+    'food.html': ('.food-feature', 13),
     'museums.html': ('.museum-feature', 10),
     'maps.html': ('.map-card', 8),
     'deep-itinerary.html': ('.deep-day', 8),
@@ -194,9 +195,25 @@ if len(museums_soup.select('#sake-japanese .tour-phrases dt')) != 16:
     errors.append('museums.html: expected six brewery-tour and ten everyday sake questions')
 
 site_text=' '.join((ROOT/name).read_text(encoding='utf-8') for name in ('daily.html','deep-itinerary.html','museums.html','maps.html'))
-for stale in ('09:15出發', '09:15 酒店', '10:15–11:45 · 強烈推薦', '待預約確認', '仍待預約'):
+for stale in (
+    '09:15出發', '09:15 酒店', '10:15–11:45 · 強烈推薦', '待預約確認', '仍待預約',
+    '天神橋筋商店街簡單午餐', '14:40入場', '四天王寺必須在16:10', '酷熱或下雨，直接刪口縄坂',
+):
     if stale in site_text:
-        errors.append(f'stale 30/8 itinerary text remains: {stale}')
+        errors.append(f'stale itinerary text remains: {stale}')
+
+day31_expectations = {
+    'daily.html': ('11:30–13:15', '13:30–14:50', '15:25–16:30', '17:15–17:35', 'food.html#alcentro'),
+    'deep-itinerary.html': ('13:30以alcentro午餐', '15:25抵達四天王寺', '新世界北側'),
+    'museums.html': ('11:30–13:15', '15:25抵達 · 16:30前先入閉門區', '16:30後看一般境內'),
+    'food.html': ('id="alcentro"', '31/8 · 13:30', '17:50到餐廳附近'),
+    'maps.html': ('alcentro ↗', '南森町駅 ↗', '新世界・通天閣本通 ↗'),
+}
+for name, expected_phrases in day31_expectations.items():
+    text=(ROOT/name).read_text(encoding='utf-8')
+    for phrase in expected_phrases:
+        if phrase not in text:
+            errors.append(f'{name}: missing updated 31/8 detail: {phrase}')
 
 try:
     data=json.loads((ROOT/'data/itinerary.json').read_text(encoding='utf-8'))
@@ -215,8 +232,8 @@ if maps_path.exists():
         errors.append(f'maps.html: expected 8 day cards, got {len(cards)}')
     if len(point_links) != 56:
         errors.append(f'maps.html: expected 56 individual map links, got {len(point_links)}')
-    if len(backup_routes) != 9:
-        errors.append(f'maps.html: expected 9 backup route links, got {len(backup_routes)}')
+    if len(backup_routes) != 10:
+        errors.append(f'maps.html: expected 10 backup route links, got {len(backup_routes)}')
     map_labels={a.get_text(' ',strip=True).replace('↗','').strip() for a in point_links}
     for label in MAP_REQUIRED_LABELS:
         if label not in map_labels:

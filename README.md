@@ -9,7 +9,7 @@
 - `deep-itinerary.html` — 八日主題、觀看方法、節奏與取捨
 - `culture.html` — 五地城市形成、地域交換網絡、工藝與宗教制度
 - `museums.html` — 入館焦點、最後入場、官方資料
-- `food.html` — 十二間餐廳、四條餐飲文化線、資料把握與餐桌讀法
+- `food.html` — 十三間餐廳、四條餐飲文化線、資料把握與餐桌讀法
 - `maps.html` — 每日 Google Maps 路線入口
 
 ## Local preview
