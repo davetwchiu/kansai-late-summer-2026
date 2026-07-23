@@ -39,7 +39,8 @@
         <tr><td>A｜14:00–16:15</td><td><a class="context-link museum-link" href="museums.html#todaiji">東大寺ミュージアム → 南大門・大佛殿 → 法華堂 → 二月堂</a></td></tr>
         <tr><td>B｜14:10–15:20</td><td><a class="context-link museum-link" href="museums.html#isuien">依水園／寧樂美術館</a>；其後只看東大寺外圍或直接回站</td></tr>
         <tr><td>17:00</td><td>近鐵奈良出發</td></tr>
-        <tr><td>19:00</td><td><a class="context-link food-link" href="food.html#joji">旨い料理・旨い酒 じょうじ</a></td></tr>`;
+        <tr><td>19:00</td><td><a class="context-link food-link" href="food.html#joji">旨い料理・旨い酒 じょうじ</a></td></tr>
+        <tr><td>餐後可選</td><td><a class="context-link drink-link" href="drinks.html#d0827-drinks">緑橋小店／熟悉 bar</a></td></tr>`;
     }
 
     const priorities = naraDay.querySelector('.day-aside ul');

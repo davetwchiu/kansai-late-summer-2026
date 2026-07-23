@@ -7,7 +7,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = [
-    'index.html','daily.html','deep-itinerary.html','culture.html','museums.html','food.html','maps.html',
+    'index.html','daily.html','deep-itinerary.html','culture.html','museums.html','food.html','drinks.html','maps.html',
     'assets/style.css','assets/site.js','assets/route.svg',
     'assets/images/hero-kansai-editorial.webp','assets/images/culture-layers-editorial.webp',
     'assets/images/dining-technique-editorial.webp','data/itinerary.json','AGENTS.md'
@@ -214,6 +214,19 @@ for name, expected_phrases in day31_expectations.items():
     for phrase in expected_phrases:
         if phrase not in text:
             errors.append(f'{name}: missing updated 31/8 detail: {phrase}')
+
+drinks_text=(ROOT/'drinks.html').read_text(encoding='utf-8')
+for phrase in (
+    'ウイスキー専門店 相葉星期一休息，已排除',
+    '十三トリス北新地', 'BAR RENÉE', 'Cellar Infini', 'Bar K',
+    '十三トリスバー 本店', '吸煙資料亦互相矛盾',
+):
+    if phrase not in drinks_text:
+        errors.append(f'drinks.html: missing required Monday-night guidance: {phrase}')
+if len(daily_soup.select('a[href^="drinks.html#d08"]')) < 6:
+    errors.append('daily.html: expected optional post-dinner links for six dinner evenings')
+if 'id="post-dinner"' not in (ROOT/'maps.html').read_text(encoding='utf-8'):
+    errors.append('maps.html: missing optional post-dinner venue map section')
 
 try:
     data=json.loads((ROOT/'data/itinerary.json').read_text(encoding='utf-8'))
