@@ -8,9 +8,13 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = [
     'index.html','daily.html','deep-itinerary.html','culture.html','museums.html','food.html','drinks.html','maps.html',
-    'assets/style.css','assets/site.js','assets/route.svg',
+    'todaiji.html','assets/style.css','assets/site.js','assets/todaiji.js','sw.js','scripts/smoke_todaiji.cjs','assets/route.svg',
     'assets/images/hero-kansai-editorial.webp','assets/images/culture-layers-editorial.webp',
-    'assets/images/dining-technique-editorial.webp','data/itinerary.json','AGENTS.md'
+    'assets/images/dining-technique-editorial.webp','data/itinerary.json','data/todaiji-media.json','AGENTS.md',
+    'assets/images/todaiji/daibutsuden.webp','assets/images/todaiji/nandaimon-structure.webp',
+    'assets/images/todaiji/nio-ungyo.webp','assets/images/todaiji/daibutsu.webp',
+    'assets/images/todaiji/octagonal-lantern.webp','assets/images/todaiji/hokkedo.webp',
+    'assets/images/todaiji/nigatsudo.webp','assets/images/todaiji/shunie.webp'
 ]
 PRIVATE_PATTERNS = [
     re.compile(r'Reservation Number', re.I),
@@ -86,7 +90,7 @@ for path in html_files:
             if frag not in ids:
                 errors.append(f'{path.name}: missing fragment #{frag} in {target_path.name}')
 
-for name in ('index.html', 'culture.html', 'food.html'):
+for name in ('index.html', 'culture.html', 'food.html', 'todaiji.html'):
     text=(ROOT/name).read_text(encoding='utf-8')
     if BANNED_CONTRAST.search(text):
         errors.append(f'{name}: avoid the 不是…而是 contrast construction')
@@ -143,7 +147,7 @@ if len(context_links) < 30:
     errors.append(f'daily.html: expected at least 30 item-level internal links, got {len(context_links)}')
 linked_targets={link.get('href') for link in context_links}
 required_item_targets={
-    'museums.html#nara-museum', 'museums.html#todaiji', 'museums.html#isuien',
+    'museums.html#nara-museum', 'museums.html#todaiji', 'todaiji.html#routes', 'museums.html#isuien',
     'museums.html#risho', 'museums.html#cut', 'museums.html#teppo',
     'museums.html#takenaka', 'museums.html#hakutsuru-detail', 'museums.html#kiku',
     'museums.html#fukuju', 'museums.html#konjaku', 'museums.html#shitennoji',
@@ -156,6 +160,40 @@ required_item_targets={
 }
 for target in sorted(required_item_targets - linked_targets):
     errors.append(f'daily.html: missing item-level link to {target}')
+
+todaiji_soup=BeautifulSoup((ROOT/'todaiji.html').read_text(encoding='utf-8'),'html.parser')
+for selector, minimum, label in (
+    ('.history-epoch', 4, 'historical epochs'),
+    ('.todaiji-stop', 6, 'field chapters'),
+    ('.object-grid article', 8, 'object-study cards'),
+    ('.field-checklist article', 4, 'field checklist stops'),
+):
+    actual=len(todaiji_soup.select(selector))
+    if actual < minimum:
+        errors.append(f'todaiji.html: expected at least {minimum} {label}, got {actual}')
+for required_id in ('visit-status','historical-spine','kegon','routes','stops','object-room','sound','field-checklist','sources'):
+    if required_id not in ids_by_file.get('todaiji.html',set()):
+        errors.append(f'todaiji.html: missing required section #{required_id}')
+for source_page in ('daily.html','deep-itinerary.html','culture.html','museums.html','maps.html'):
+    if 'href="todaiji.html' not in (ROOT/source_page).read_text(encoding='utf-8'):
+        errors.append(f'{source_page}: missing cross-link to Tōdai-ji special page')
+
+todaiji_js=(ROOT/'assets/todaiji.js').read_text(encoding='utf-8')
+for marker in ('data-reading-mode', 'data-route-select', 'data-material-filter', 'serviceWorker'):
+    if marker not in todaiji_js:
+        errors.append(f'assets/todaiji.js: missing interaction marker {marker}')
+try:
+    media=json.loads((ROOT/'data/todaiji-media.json').read_text(encoding='utf-8'))
+    if len(media.get('images',[])) != 8:
+        errors.append('data/todaiji-media.json: expected eight verified local images')
+    for item in media.get('images',[]):
+        local=item.get('local','')
+        if not local or not (ROOT/local).exists():
+            errors.append(f'data/todaiji-media.json: missing local image {local}')
+        if not item.get('creator') or not item.get('licence') or not item.get('source'):
+            errors.append(f'data/todaiji-media.json: incomplete attribution for {local}')
+except Exception as exc:
+    errors.append(f'data/todaiji-media.json invalid: {exc}')
 
 reciprocal_groups={
     'food.html': ('.food-feature', 14),

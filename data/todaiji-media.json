@@ -1,0 +1,93 @@
+{
+  "page": "todaiji.html",
+  "verified": "2026-07-23",
+  "policy": "Public GitHub Pages build: exact Commons files with verified licences; original-publisher players and links for protected audio/video; no private-study media.",
+  "images": [
+    {
+      "local": "assets/images/todaiji/daibutsuden.webp",
+      "title": "Tōdai-ji Great Buddha Hall",
+      "creator": "↑PON（ウエポン）",
+      "source": "https://commons.wikimedia.org/wiki/File:Todaiji_daibutsuden_20070923.jpg",
+      "licence": "CC BY-SA 3.0",
+      "transform": "Resized, converted to WebP and displayed with responsive crops."
+    },
+    {
+      "local": "assets/images/todaiji/nandaimon-structure.webp",
+      "title": "Nandaimon interior structure",
+      "creator": "663highland",
+      "source": "https://commons.wikimedia.org/wiki/File:Todaiji06s3200.jpg",
+      "licence": "CC BY 2.5",
+      "transform": "Auto-oriented, resized and converted to WebP."
+    },
+    {
+      "local": "assets/images/todaiji/nio-ungyo.webp",
+      "title": "Niō Ungyō at Nandaimon",
+      "creator": "Bamse",
+      "source": "https://commons.wikimedia.org/wiki/File:Nio_Ungyo_at_Todaiji_Nandaimon.jpg",
+      "licence": "CC BY-SA 3.0",
+      "transform": "Auto-oriented, resized and converted to WebP."
+    },
+    {
+      "local": "assets/images/todaiji/daibutsu.webp",
+      "title": "Daibutsu of Tōdai-ji",
+      "creator": "WordRidden",
+      "source": "https://commons.wikimedia.org/wiki/File:Daibutsu_of_Todaiji_2.jpg",
+      "licence": "CC BY 3.0",
+      "transform": "Resized and converted to WebP."
+    },
+    {
+      "local": "assets/images/todaiji/octagonal-lantern.webp",
+      "title": "Octagonal Lantern",
+      "creator": "そらみみ",
+      "source": "https://commons.wikimedia.org/wiki/File:Octagonal_Lantern_in_front_of_Daibutsuden_of_Todaiji_Temple.jpg",
+      "licence": "CC BY-SA 3.0",
+      "transform": "Resized and converted to WebP."
+    },
+    {
+      "local": "assets/images/todaiji/hokkedo.webp",
+      "title": "Hokke-dō",
+      "creator": "KENPEI",
+      "source": "https://commons.wikimedia.org/wiki/File:Todaiji_hokkedo.jpg",
+      "licence": "CC BY-SA 3.0",
+      "transform": "Resized and converted to WebP."
+    },
+    {
+      "local": "assets/images/todaiji/nigatsudo.webp",
+      "title": "Nigatsu-dō",
+      "creator": "Ignis",
+      "source": "https://commons.wikimedia.org/wiki/File:Nigatsu-dou_Todaiji_JPN1.jpg",
+      "licence": "CC BY-SA 2.5",
+      "transform": "Resized and converted to WebP."
+    },
+    {
+      "local": "assets/images/todaiji/shunie.webp",
+      "title": "Shuni-e at Nigatsu-dō",
+      "creator": "Ignis",
+      "source": "https://commons.wikimedia.org/wiki/File:Todaiji_Syunie_Nara_JPN_001.JPG",
+      "licence": "CC BY-SA 2.5",
+      "transform": "Resized and converted to WebP."
+    }
+  ],
+  "embedsAndLinks": [
+    {
+      "title": "Shuni-e Dattan",
+      "url": "https://www.youtube.com/watch?v=dZQYA9QCJ2Y",
+      "mode": "original-publisher embed"
+    },
+    {
+      "title": "Kegon-shū shōmyō",
+      "url": "https://www2.ntj.jac.go.jp/dglib/contents/learn/edc28/miru/temple/s_11.html",
+      "mode": "link to Japan Arts Council player"
+    },
+    {
+      "title": "Nara Tarō bell recording",
+      "url": "https://www.youtube.com/watch?v=OfkVedxhMRs",
+      "mode": "external non-official recording, clearly labelled"
+    },
+    {
+      "title": "Daibutsu Ominugui 360",
+      "url": "https://www.youtube.com/watch?v=L6Zt28mJ8Q0",
+      "mode": "external original-player link"
+    }
+  ]
+}
