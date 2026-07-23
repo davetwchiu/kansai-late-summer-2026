@@ -149,7 +149,7 @@ body::before{display:none}
 .todaiji-hero-copy{max-width:790px}
 .todaiji-kana{margin:18px 0 0;font-family:var(--serif);font-size:1.25rem;letter-spacing:.14em;color:#f1d59f}
 .todaiji-kana span{font-family:var(--sans);font-size:.68rem;letter-spacing:.16em;color:#d5e4df}
-.todaiji-hero h1{font-family:var(--serif);font-size:clamp(3.5rem,7vw,6.8rem);font-weight:500;letter-spacing:.01em;line-height:1.02;margin:.12em 0 .28em}
+.todaiji-hero h1{font-family:var(--serif);font-size:clamp(3.3rem,5.3vw,5.6rem);font-weight:500;letter-spacing:.01em;line-height:1.02;margin:.12em 0 .28em}
 .todaiji-hero .lede{max-width:760px;font-size:1.08rem;color:#e1ece8}
 .todaiji-hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
 .todaiji-hero .button{background:var(--todaiji-copper);border-color:var(--todaiji-copper)}
@@ -334,7 +334,7 @@ body[data-reading-mode="field"] .back-to-top{display:none}
   .todaiji-hero-art img{object-position:62% center}
   .todaiji-hero-art::after{background:linear-gradient(0deg,rgba(10,30,30,.99) 0%,rgba(10,30,30,.9) 62%,rgba(10,30,30,.28) 100%)}
   .todaiji-hero-grid{display:block;padding-top:250px;padding-bottom:88px}
-  .todaiji-hero h1{font-size:clamp(2.8rem,13vw,4.2rem)}
+  .todaiji-hero h1{font-size:clamp(2.25rem,9.2vw,3.5rem)}
   .hero-thesis{display:none}
   .image-credit{left:19px;right:19px;bottom:12px}
   .todaiji-local-nav{top:68px}
