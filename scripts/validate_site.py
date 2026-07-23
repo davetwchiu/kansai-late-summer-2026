@@ -76,6 +76,7 @@ for path in html_files:
         if not val or val.startswith(('http://','https://','mailto:','tel:','javascript:')):
             continue
         target, _, frag = val.partition('#')
+        target = target.partition('?')[0]
         target_path=(path.parent/target).resolve() if target else path.resolve()
         try:
             target_path.relative_to(ROOT.resolve())
