@@ -7,7 +7,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = [
-    'index.html','daily.html','deep-itinerary.html','culture.html','museums.html','food.html','maps.html',
+    'index.html','daily.html','deep-itinerary.html','culture.html','museums.html','food.html','nightlife.html','maps.html',
     'assets/style.css','assets/site.js','assets/route.svg',
     'assets/images/hero-kansai-editorial.webp','assets/images/culture-layers-editorial.webp',
     'assets/images/dining-technique-editorial.webp','data/itinerary.json','AGENTS.md'
@@ -87,7 +87,7 @@ for path in html_files:
             if frag not in ids:
                 errors.append(f'{path.name}: missing fragment #{frag} in {target_path.name}')
 
-for name in ('index.html', 'culture.html', 'food.html'):
+for name in ('index.html', 'culture.html', 'food.html', 'nightlife.html'):
     text=(ROOT/name).read_text(encoding='utf-8')
     if BANNED_CONTRAST.search(text):
         errors.append(f'{name}: avoid the 不是…而是 contrast construction')
@@ -133,15 +133,16 @@ if len(food_soup.select('.service-japanese')) != 3:
     errors.append('food.html: expected Japanese ordering help only at three relevant restaurants')
 if len(food_soup.select('.service-japanese dt')) < 10:
     errors.append('food.html: insufficient contextual Japanese ordering phrases')
-bar_cards=food_soup.select('#after-dinner .food-list-deep > article')
+nightlife_soup=BeautifulSoup((ROOT/'nightlife.html').read_text(encoding='utf-8'),'html.parser')
+bar_cards=nightlife_soup.select('.food-list-deep > article')
 if len(bar_cards) != 7:
-    errors.append(f'food.html: expected seven after-dinner bar guides, got {len(bar_cards)}')
+    errors.append(f'nightlife.html: expected seven after-dinner bar guides, got {len(bar_cards)}')
 for card in bar_cards:
     card_id=card.get('id','without-id')
     if not card.select_one('a[href^="daily.html#d"]'):
-        errors.append(f'food.html: bar #{card_id} cannot return to its daily itinerary')
+        errors.append(f'nightlife.html: bar #{card_id} cannot return to its daily itinerary')
     if not card.select_one('a[href^="maps.html#d"]'):
-        errors.append(f'food.html: bar #{card_id} cannot reach its daily map')
+        errors.append(f'nightlife.html: bar #{card_id} cannot reach its daily map')
 
 site_js=(ROOT/'assets/site.js').read_text(encoding='utf-8')
 if "main > .section, main > .deep-day" not in site_js or "回頁首 ↑" not in site_js:
@@ -163,8 +164,9 @@ required_item_targets={
     'food.html#nichigetsu', 'food.html#espice', 'food.html#masaru',
     'food.html#alcentro',
     'food.html#shoru', 'food.html#kurosugi',
-    'food.html#junk', 'food.html#ellie', 'food.html#samboa', 'food.html#infobar',
-    'food.html#main-malt', 'food.html#aiba', 'food.html#bar-k',
+    'nightlife.html#junk', 'nightlife.html#ellie', 'nightlife.html#samboa',
+    'nightlife.html#infobar', 'nightlife.html#main-malt', 'nightlife.html#aiba',
+    'nightlife.html#bar-k',
 }
 for target in sorted(required_item_targets - linked_targets):
     errors.append(f'daily.html: missing item-level link to {target}')
