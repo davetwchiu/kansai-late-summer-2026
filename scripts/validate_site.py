@@ -34,7 +34,7 @@ MAP_REQUIRED_LABELS = [
     'エスピス', '大阪くらしの今昔館', 'alcentro', '南森町駅',
     '四天王寺', '新世界・通天閣本通', '鮨まさる',
     'Osteria Shoru', '桜井駅', '箕面駅', '箕面滝道',
-    '瀧安寺', '箕面大滝', '黒杉',
+    '瀧安寺', '箕面大滝', 'さか本', '黒杉',
 ]
 errors=[]
 BANNED_CONTRAST = re.compile(r'不是[^。；]{0,80}而是')
@@ -94,7 +94,7 @@ for name in ('index.html', 'culture.html', 'food.html'):
 structure_checks = {
     'index.html': ('.atlas-era', 5, 'historical atlas entries'),
     'culture.html': ('.culture-place', 5, 'city culture entries'),
-    'food.html': ('.food-feature', 13, 'restaurant features'),
+    'food.html': ('.food-feature', 14, 'restaurant features'),
 }
 for name, (selector, expected, label) in structure_checks.items():
     soup=BeautifulSoup((ROOT/name).read_text(encoding='utf-8'),'html.parser')
@@ -152,13 +152,13 @@ required_item_targets={
     'food.html#murakami', 'food.html#ritmicita', 'food.html#iwata',
     'food.html#nichigetsu', 'food.html#espice', 'food.html#masaru',
     'food.html#alcentro',
-    'food.html#shoru', 'food.html#kurosugi',
+    'food.html#shoru', 'food.html#sakamoto', 'food.html#kurosugi',
 }
 for target in sorted(required_item_targets - linked_targets):
     errors.append(f'daily.html: missing item-level link to {target}')
 
 reciprocal_groups={
-    'food.html': ('.food-feature', 13),
+    'food.html': ('.food-feature', 14),
     'museums.html': ('.museum-feature', 10),
     'maps.html': ('.map-card', 8),
     'deep-itinerary.html': ('.deep-day', 8),
@@ -243,10 +243,10 @@ if maps_path.exists():
     backup_routes=maps_soup.select('.map-actions a[href*="google.com/maps/dir"]')
     if len(cards) != 8:
         errors.append(f'maps.html: expected 8 day cards, got {len(cards)}')
-    if len(point_links) != 56:
-        errors.append(f'maps.html: expected 56 individual map links, got {len(point_links)}')
-    if len(backup_routes) != 10:
-        errors.append(f'maps.html: expected 10 backup route links, got {len(backup_routes)}')
+    if len(point_links) != 58:
+        errors.append(f'maps.html: expected 58 individual map links, got {len(point_links)}')
+    if len(backup_routes) != 11:
+        errors.append(f'maps.html: expected 11 backup route links, got {len(backup_routes)}')
     map_labels={a.get_text(' ',strip=True).replace('↗','').strip() for a in point_links}
     for label in MAP_REQUIRED_LABELS:
         if label not in map_labels:
