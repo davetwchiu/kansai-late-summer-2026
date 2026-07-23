@@ -219,12 +219,20 @@ drinks_text=(ROOT/'drinks.html').read_text(encoding='utf-8')
 for phrase in (
     'ウイスキー専門店 相葉星期一休息，已排除',
     '十三トリス北新地', 'BAR RENÉE', 'Cellar Infini', 'Bar K',
-    '十三トリスバー 本店', '吸煙資料亦互相矛盾',
+    '十三トリスバー 本店',
+    'BAR FORT HORSE', 'スタンド緑橋', 'バー ネムリ',
+    'ダイアモンドダスト', '北新地サンボア', 'BAR AUGUSTA LUX',
 ):
     if phrase not in drinks_text:
-        errors.append(f'drinks.html: missing required Monday-night guidance: {phrase}')
-if len(daily_soup.select('a[href^="drinks.html#d08"]')) < 6:
-    errors.append('daily.html: expected optional post-dinner links for six dinner evenings')
+        errors.append(f'drinks.html: missing required post-dinner guidance: {phrase}')
+drinks_soup=BeautifulSoup(drinks_text,'html.parser')
+for night_id in ('d0826-drinks','d0827-drinks','d0828-drinks','d0829-drinks','d0830-drinks','d0831-drinks','d0901-drinks'):
+    night=drinks_soup.find(id=night_id)
+    option_count=len(night.select('.drink-option')) if night else 0
+    if not 2 <= option_count <= 4:
+        errors.append(f'drinks.html: {night_id} expected 2-4 options, got {option_count}')
+if len(daily_soup.select('a[href^="drinks.html#d08"], a[href="drinks.html#d0901-drinks"]')) < 7:
+    errors.append('daily.html: expected optional post-dinner links for seven dinner evenings')
 if 'id="post-dinner"' not in (ROOT/'maps.html').read_text(encoding='utf-8'):
     errors.append('maps.html: missing optional post-dinner venue map section')
 
