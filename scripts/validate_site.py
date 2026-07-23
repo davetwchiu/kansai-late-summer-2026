@@ -7,7 +7,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = [
-    'index.html','daily.html','deep-itinerary.html','culture.html','museums.html','food.html','maps.html',
+    'index.html','daily.html','deep-itinerary.html','culture.html','museums.html','food.html','nightlife.html','maps.html',
     'assets/style.css','assets/site.js','assets/route.svg',
     'assets/images/hero-kansai-editorial.webp','assets/images/culture-layers-editorial.webp',
     'assets/images/dining-technique-editorial.webp','data/itinerary.json','AGENTS.md'
@@ -28,13 +28,14 @@ MAP_REQUIRED_LABELS = [
     '堺伝匠館／堺刃物ミュージアム CUT', '妙国寺前停留場',
     '鉄炮鍛冶屋敷', '高須神社停留場', '七道駅',
     'しまなみふれんち Murakami', 'ritmicita', '炭火いわ田',
+    'BAR北浜 Junk', 'Ellie', '天神橋 SAMBOA BAR', 'INFOBAR',
     'JR大阪駅', '新神戸駅', '竹中大工道具館', 'トンカツとワイン 日月',
     '阪神神戸三宮駅', '阪神魚崎駅', '菊正宗酒造記念館',
     '白鶴酒造資料館', '神戸酒心館', '阪神石屋川駅',
-    'エスピス', '大阪くらしの今昔館', 'alcentro', '南森町駅',
-    '四天王寺', '新世界・通天閣本通', '鮨まさる',
+    'エスピス', 'Main Malt', '大阪くらしの今昔館', 'alcentro', '南森町駅',
+    '四天王寺', '新世界・通天閣本通', '鮨まさる', 'ウイスキー専門店 相葉',
     'Osteria Shoru', '桜井駅', '箕面駅', '箕面滝道',
-    '瀧安寺', '箕面大滝', '黒杉',
+    '瀧安寺', '箕面大滝', 'さか本', 'Bar K', '黒杉',
 ]
 errors=[]
 BANNED_CONTRAST = re.compile(r'不是[^。；]{0,80}而是')
@@ -86,7 +87,7 @@ for path in html_files:
             if frag not in ids:
                 errors.append(f'{path.name}: missing fragment #{frag} in {target_path.name}')
 
-for name in ('index.html', 'culture.html', 'food.html'):
+for name in ('index.html', 'culture.html', 'food.html', 'nightlife.html'):
     text=(ROOT/name).read_text(encoding='utf-8')
     if BANNED_CONTRAST.search(text):
         errors.append(f'{name}: avoid the 不是…而是 contrast construction')
@@ -132,6 +133,16 @@ if len(food_soup.select('.service-japanese')) != 3:
     errors.append('food.html: expected Japanese ordering help only at three relevant restaurants')
 if len(food_soup.select('.service-japanese dt')) < 10:
     errors.append('food.html: insufficient contextual Japanese ordering phrases')
+nightlife_soup=BeautifulSoup((ROOT/'nightlife.html').read_text(encoding='utf-8'),'html.parser')
+bar_cards=nightlife_soup.select('.food-list-deep > article')
+if len(bar_cards) != 7:
+    errors.append(f'nightlife.html: expected seven after-dinner bar guides, got {len(bar_cards)}')
+for card in bar_cards:
+    card_id=card.get('id','without-id')
+    if not card.select_one('a[href^="daily.html#d"]'):
+        errors.append(f'nightlife.html: bar #{card_id} cannot return to its daily itinerary')
+    if not card.select_one('a[href^="maps.html#d"]'):
+        errors.append(f'nightlife.html: bar #{card_id} cannot reach its daily map')
 
 site_js=(ROOT/'assets/site.js').read_text(encoding='utf-8')
 if "main > .section, main > .deep-day" not in site_js or "回頁首 ↑" not in site_js:
@@ -153,6 +164,9 @@ required_item_targets={
     'food.html#nichigetsu', 'food.html#espice', 'food.html#masaru',
     'food.html#alcentro',
     'food.html#shoru', 'food.html#kurosugi',
+    'nightlife.html#junk', 'nightlife.html#ellie', 'nightlife.html#samboa',
+    'nightlife.html#infobar', 'nightlife.html#main-malt', 'nightlife.html#aiba',
+    'nightlife.html#bar-k',
 }
 for target in sorted(required_item_targets - linked_targets):
     errors.append(f'daily.html: missing item-level link to {target}')
@@ -230,10 +244,10 @@ if maps_path.exists():
     backup_routes=maps_soup.select('.map-actions a[href*="google.com/maps/dir"]')
     if len(cards) != 8:
         errors.append(f'maps.html: expected 8 day cards, got {len(cards)}')
-    if len(point_links) != 56:
-        errors.append(f'maps.html: expected 56 individual map links, got {len(point_links)}')
-    if len(backup_routes) != 10:
-        errors.append(f'maps.html: expected 10 backup route links, got {len(backup_routes)}')
+    if len(point_links) != 64:
+        errors.append(f'maps.html: expected 64 individual map links, got {len(point_links)}')
+    if len(backup_routes) != 17:
+        errors.append(f'maps.html: expected 17 backup route links, got {len(backup_routes)}')
     map_labels={a.get_text(' ',strip=True).replace('↗','').strip() for a in point_links}
     for label in MAP_REQUIRED_LABELS:
         if label not in map_labels:
