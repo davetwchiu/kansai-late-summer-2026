@@ -3,20 +3,23 @@
 #visit-status .section-heading .label::after{content:"27 Aug · itinerary";font-size:.74rem;letter-spacing:.16em;text-transform:uppercase}
 .hall-scale-section .section-heading p{font-size:0}
 .hall-scale-section .section-heading p::after{content:"按鍵切換1709年現殿與創建／鎌倉大殿輪廓；寬度比例固定，沒有可任意調校的數值。";font-size:.95rem;line-height:1.72;color:var(--muted)}
-.lotus-cosmos{width:auto!important;height:auto!important;min-height:0!important;border-radius:0!important;display:grid!important;grid-template-columns:minmax(260px,.8fr) minmax(0,1fr);gap:24px;background:transparent!important;color:var(--ink)!important;overflow:visible!important}
-.lotus-evidence{margin:0;background:#171a1a;padding:14px}
-.lotus-evidence img{width:100%;max-height:560px;object-fit:contain;background:#111}
+
+/* Keep the lotus-petal image beside the Kegon text; its explanation spans the full section below. */
+.kegon-grid{grid-template-columns:minmax(0,1fr) minmax(360px,.72fr)!important;gap:48px!important;align-items:start!important}
+.lotus-cosmos{display:contents!important}
+.lotus-evidence{grid-column:2;grid-row:1;margin:0;background:#171a1a;padding:14px;align-self:start}
+.lotus-evidence img{width:100%;max-height:610px;object-fit:contain;background:#111}
 .lotus-evidence figcaption{font-size:.72rem;line-height:1.5;color:#d9d6ce;margin-top:9px}
 .lotus-evidence a{color:#f0d393}
-.lotus-reading{background:var(--card);border:1px solid var(--line);padding:28px}
+.lotus-reading{grid-column:1/-1;grid-row:2;background:var(--card);border:1px solid var(--line);padding:28px;margin-top:2px}
 .lotus-reading h3{font-family:var(--serif);font-size:1.7rem;color:var(--navy);margin:0 0 16px}
-.lotus-reading ol{list-style:none;counter-reset:lotus;padding:0;margin:0}
-.lotus-reading li{counter-increment:lotus;display:grid;grid-template-columns:34px 1fr;gap:10px;padding:13px 0;border-bottom:1px solid var(--line)}
-.lotus-reading li::before{content:counter(lotus);width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--todaiji-copper);color:#fff;font-size:.78rem}
-.lotus-reading strong,.lotus-reading span{display:block;grid-column:2}
+.lotus-reading ol{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;list-style:none;counter-reset:lotus;padding:0;margin:0;background:var(--line)}
+.lotus-reading li{counter-increment:lotus;display:block;background:var(--card);padding:18px;border:0}
+.lotus-reading li::before{content:counter(lotus);width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--todaiji-copper);color:#fff;font-size:.78rem;margin-bottom:10px}
+.lotus-reading strong,.lotus-reading span{display:block}
 .lotus-reading strong{color:var(--navy)}
-.lotus-reading span{font-size:.9rem;color:var(--muted);margin-top:2px}
-.museum-link-inline{margin-top:18px;font-size:.84rem}
+.lotus-reading span{font-size:.9rem;color:var(--muted);margin-top:5px}
+.museum-link-inline{margin:18px 0 0;font-size:.84rem}
 
 .hall-compare .hall-stage{position:relative;min-height:340px;display:flex;align-items:end;justify-content:center;padding:35px;background:linear-gradient(#e8e1d4,#dcd2c2);overflow:hidden}
 .hall-compare .hall-outline{position:absolute;bottom:35px;left:50%;transform:translateX(-50%);transition:width .35s ease,opacity .35s ease,border-color .35s ease,background .35s ease}
@@ -75,7 +78,10 @@ body[data-reading-mode="field"] #routes [data-route-panel="compact"]{display:blo
 body[data-reading-mode="field"] #field-checklist{padding-top:42px}
 
 @media(max-width:900px){
-  .lotus-cosmos{grid-template-columns:1fr}
+  .kegon-grid{grid-template-columns:1fr!important;gap:28px!important}
+  .lotus-evidence{grid-column:1;grid-row:auto}
+  .lotus-reading{grid-column:1;grid-row:auto}
+  .lotus-reading ol{grid-template-columns:1fr}
   .museum-replacement-guide{grid-template-columns:1fr}
   #object-room .object-grid{grid-template-columns:1fr}
 }
