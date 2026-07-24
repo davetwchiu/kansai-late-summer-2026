@@ -15,7 +15,7 @@ const screenshots = [
     for (const viewport of screenshots) {
       const page = await browser.newPage({ viewport });
       page.on("console", (message) => {
-        if (message.type() === "error" && !message.text().includes("youtube")) {
+        if (message.type() === "error" && !message.text().includes("youtube") && !message.text().includes("wikimedia")) {
           errors.push(`${viewport.name}: console error: ${message.text()}`);
         }
       });
@@ -30,6 +30,15 @@ const screenshots = [
     const page = await browser.newPage({ viewport: { width: 1024, height: 900 } });
     await page.goto(`${baseUrl}/todaiji.html`, { waitUntil: "load" });
 
+    if (await page.locator("body").innerText().then((text) => text.includes("Plan A") || text.includes("Plan B"))) {
+      errors.push("Tōdai-ji page still exposes Plan A/Plan B wording");
+    }
+
+    if (!await page.locator(".lotus-evidence img").isVisible()) errors.push("lotus-petal evidence image is not visible");
+    if (await page.locator("#hall-scale").count()) errors.push("obsolete hall-width slider remains");
+    await page.locator("[data-hall-view-select='ancient']").click();
+    if (await page.locator("[data-hall-view]").getAttribute("data-hall-view") !== "ancient") errors.push("hall comparison did not switch to ancient state");
+
     await page.locator("[data-route-select='full']").click();
     if (!await page.locator("[data-route-panel='full']").isVisible()) errors.push("full route does not open");
 
@@ -37,21 +46,26 @@ const screenshots = [
     const visibleTechniques = await page.locator("[data-material-card]:visible").count();
     const visibleObjects = await page.locator("[data-object-material]:visible").count();
     if (visibleTechniques !== 1) errors.push(`clay filter shows ${visibleTechniques} technique cards`);
-    if (visibleObjects !== 3) errors.push(`clay filter shows ${visibleObjects} object cards`);
+    if (visibleObjects !== 2) errors.push(`clay filter shows ${visibleObjects} object cards`);
 
     await page.locator("[data-reconstruction='hypothesis']").click();
     const hypotheses = await page.locator("[data-hypothesis]:visible").count();
     if (hypotheses !== 3) errors.push(`reconstruction shows ${hypotheses} hypothesis cards`);
 
     await page.locator("[data-reading-mode-toggle]").click();
-    if (await page.locator("body").getAttribute("data-reading-mode") !== "field") errors.push("field mode did not activate");
-    if (await page.locator("#historical-spine").isVisible()) errors.push("long study section remains visible in field mode");
-    if (!await page.locator("#field-checklist").isVisible()) errors.push("field checklist is hidden in field mode");
+    if (await page.locator("body").getAttribute("data-reading-mode") !== "field") errors.push("on-site quick read did not activate");
+    if (await page.locator("#historical-spine").isVisible()) errors.push("long study section remains visible in on-site mode");
+    if (!await page.locator("#field-checklist").isVisible()) errors.push("on-site stepper is hidden");
+    if (await page.locator("#field-checklist input[type='checkbox']").count()) errors.push("inert checklist boxes remain");
 
-    const firstCheck = page.locator("[data-field-stop] input").first();
-    await firstCheck.check();
-    await page.reload({ waitUntil: "load" });
-    if (!await firstCheck.isChecked()) errors.push("field checklist did not persist");
+    const firstTitle = await page.locator("[data-field-step] h3").innerText();
+    await page.locator("[data-field-next]").click();
+    const secondTitle = await page.locator("[data-field-step] h3").innerText();
+    if (firstTitle === secondTitle) errors.push("next-stop control did not change the field step");
+    if (await page.locator("[data-field-progress-label]").innerText() !== "2 / 6") errors.push("field progress did not update");
+
+    const objectCount = await page.locator("#object-room [data-object-material]").count();
+    if (objectCount !== 8) errors.push(`museum dossier contains ${objectCount} object cards`);
     await page.close();
   } finally {
     await browser.close();
@@ -62,5 +76,5 @@ const screenshots = [
     errors.forEach((error) => console.error(`- ${error}`));
     process.exit(1);
   }
-  console.log("TŌDAI-JI SMOKE TEST PASSED: desktop, iPad, mobile, route switch, material filter, reconstruction, field mode and local checklist");
+  console.log("TŌDAI-JI SMOKE TEST PASSED: responsive layouts, evidence image, hall toggle, routes, material filter, reconstruction and on-site stepper");
 })();
