@@ -6,6 +6,7 @@ html = Path("todaiji.html").read_text()
 soup = BeautifulSoup(html, "html.parser")
 section = soup.select_one("#materials")
 assert section is not None
+assert section.parent.select_one(":scope > #nandaimon").find_previous_sibling("section") == section
 assert not section.select("[data-material-filter]"), "material filter buttons must remain removed"
 assert "data-material-filter" not in Path("assets/todaiji.js").read_text()
 assert "material-controls" not in Path("assets/style.css").read_text()
