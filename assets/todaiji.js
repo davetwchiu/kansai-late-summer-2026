@@ -63,7 +63,6 @@
 
   const materialButtons = document.querySelectorAll("[data-material-filter]");
   const techniqueCards = document.querySelectorAll("[data-material-card]");
-  const objectCards = document.querySelectorAll("[data-object-material]");
   materialButtons.forEach((button) => button.addEventListener("click", () => {
     const filter = button.dataset.materialFilter;
     materialButtons.forEach((item) => {
@@ -74,7 +73,7 @@
     techniqueCards.forEach((card) => {
       card.hidden = filter !== "all" && card.dataset.materialCard !== filter;
     });
-    objectCards.forEach((card) => {
+    document.querySelectorAll("[data-object-material]").forEach((card) => {
       const visible = filter === "all" || card.dataset.objectMaterial === filter;
       card.hidden = !visible;
       card.classList.toggle("material-match", filter !== "all" && visible);
