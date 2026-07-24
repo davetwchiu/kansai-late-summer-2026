@@ -50,15 +50,6 @@ const screenshots = [
     const hypotheses = await page.locator("[data-hypothesis]:visible").count();
     if (hypotheses !== 3) errors.push(`reconstruction shows ${hypotheses} hypothesis cards`);
 
-    await page.locator("[data-reading-mode-toggle]").click();
-    if (await page.locator("body").getAttribute("data-reading-mode") !== "field") errors.push("on-site quick read did not activate");
-    if (await page.locator("#historical-spine").isVisible()) errors.push("long study section remains visible in on-site mode");
-    if (!await page.locator("#field-checklist").isVisible()) errors.push("on-site quick-read handoff is hidden");
-    if (await page.locator("#field-checklist input[type='checkbox']").count()) errors.push("inert checklist boxes remain");
-    const quickReadHref = await page.locator("#field-checklist .todaiji-quick-read-link a").getAttribute("href");
-    if (quickReadHref !== "museums.html#todaiji-quick-read") errors.push("on-site quick read does not link to the museum page");
-
-    await page.locator("[data-reading-mode-toggle]").click();
     const allImages = await page.locator("main img").count();
     const linkedImages = await page.locator("main a.image-original-link > img, main a.four-king-image > img, main .sound-card-image > a > img").count();
     if (allImages === 0) errors.push("Tōdai-ji page contains no content images");

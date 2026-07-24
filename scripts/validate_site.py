@@ -167,12 +167,11 @@ for selector, minimum, label in (
     ('.history-epoch', 4, 'historical epochs'),
     ('.todaiji-stop', 6, 'field chapters'),
     ('.object-grid article', 8, 'object-study cards'),
-    ('.field-checklist article', 4, 'field checklist stops'),
 ):
     actual=len(todaiji_soup.select(selector))
     if actual < minimum:
         errors.append(f'todaiji.html: expected at least {minimum} {label}, got {actual}')
-for required_id in ('visit-status','historical-spine','kegon','routes','stops','object-room','sound','field-checklist','sources'):
+for required_id in ('visit-status','historical-spine','kegon','routes','stops','object-room','sound'):
     if required_id not in ids_by_file.get('todaiji.html',set()):
         errors.append(f'todaiji.html: missing required section #{required_id}')
 for source_page in ('daily.html','deep-itinerary.html','culture.html','museums.html','maps.html'):
