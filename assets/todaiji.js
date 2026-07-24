@@ -61,25 +61,6 @@
     });
   }));
 
-  const materialButtons = document.querySelectorAll("[data-material-filter]");
-  const techniqueCards = document.querySelectorAll("[data-material-card]");
-  materialButtons.forEach((button) => button.addEventListener("click", () => {
-    const filter = button.dataset.materialFilter;
-    materialButtons.forEach((item) => {
-      const selected = item === button;
-      item.classList.toggle("active", selected);
-      item.setAttribute("aria-pressed", String(selected));
-    });
-    techniqueCards.forEach((card) => {
-      card.hidden = filter !== "all" && card.dataset.materialCard !== filter;
-    });
-    document.querySelectorAll("[data-object-material]").forEach((card) => {
-      const visible = filter === "all" || card.dataset.objectMaterial === filter;
-      card.hidden = !visible;
-      card.classList.toggle("material-match", filter !== "all" && visible);
-    });
-  }));
-
   const reconstructionButtons = document.querySelectorAll("[data-reconstruction]");
   const reconstructionStage = document.querySelector("[data-reconstruction-stage]");
   const hypotheses = document.querySelectorAll("[data-hypothesis]");

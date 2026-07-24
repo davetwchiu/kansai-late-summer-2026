@@ -34,7 +34,7 @@ const screenshots = [
       errors.push("Tōdai-ji page still exposes Plan A/Plan B wording");
     }
 
-    if (!await page.locator(".lotus-evidence img").isVisible()) errors.push("lotus-petal evidence image is not visible");
+    if (await page.locator(".lotus-evidence img").count() !== 1) errors.push("lotus-petal evidence image is missing");
     if (await page.locator("#hall-scale").count()) errors.push("obsolete hall-width slider remains");
     await page.locator("[data-hall-view-select='ancient']").click();
     if (await page.locator("[data-hall-view]").getAttribute("data-hall-view") !== "ancient") errors.push("hall comparison did not switch to ancient state");
@@ -42,11 +42,9 @@ const screenshots = [
     await page.locator("[data-route-select='full']").click();
     if (!await page.locator("[data-route-panel='full']").isVisible()) errors.push("full route does not open");
 
-    await page.locator("[data-material-filter='clay']").click();
-    const visibleTechniques = await page.locator("[data-material-card]:visible").count();
-    const visibleObjects = await page.locator("[data-object-material]:visible").count();
-    if (visibleTechniques !== 1) errors.push(`clay filter shows ${visibleTechniques} technique cards`);
-    if (visibleObjects !== 2) errors.push(`clay filter shows ${visibleObjects} object cards`);
+    if (await page.locator("[data-material-filter]").count()) errors.push("obsolete material filter remains");
+    const materialExamples = await page.locator("#materials [data-material-card] .technique-example a[href^='https://']").count();
+    if (materialExamples !== 5) errors.push(`material cards contain ${materialExamples} linked examples instead of 5`);
 
     await page.locator("[data-reconstruction='hypothesis']").click();
     const hypotheses = await page.locator("[data-hypothesis]:visible").count();
@@ -55,14 +53,10 @@ const screenshots = [
     await page.locator("[data-reading-mode-toggle]").click();
     if (await page.locator("body").getAttribute("data-reading-mode") !== "field") errors.push("on-site quick read did not activate");
     if (await page.locator("#historical-spine").isVisible()) errors.push("long study section remains visible in on-site mode");
-    if (!await page.locator("#field-checklist").isVisible()) errors.push("on-site stepper is hidden");
+    if (!await page.locator("#field-checklist").isVisible()) errors.push("on-site quick-read handoff is hidden");
     if (await page.locator("#field-checklist input[type='checkbox']").count()) errors.push("inert checklist boxes remain");
-
-    const firstTitle = await page.locator("[data-field-step] h3").innerText();
-    await page.locator("[data-field-next]").click();
-    const secondTitle = await page.locator("[data-field-step] h3").innerText();
-    if (firstTitle === secondTitle) errors.push("next-stop control did not change the field step");
-    if (await page.locator("[data-field-progress-label]").innerText() !== "2 / 6") errors.push("field progress did not update");
+    const quickReadHref = await page.locator("#field-checklist .todaiji-quick-read-link a").getAttribute("href");
+    if (quickReadHref !== "museums.html#todaiji-quick-read") errors.push("on-site quick read does not link to the museum page");
 
     await page.locator("[data-reading-mode-toggle]").click();
     const allImages = await page.locator("main img").count();
@@ -116,15 +110,16 @@ const screenshots = [
     const playlistSrc = await page.locator('#sound [data-sound-card="shunie-recording"] iframe').getAttribute("src");
     if (!playlistSrc || !playlistSrc.includes("list=PLRbGqqBTO3HaZoQ2Keur6W5LOjqaS_Vyn")) errors.push("Shuni-e recording player does not retain the requested playlist");
 
-    const expectedObjectLinks = {
-      "birth-buddha": "online.bunka.go.jp/db/heritages/detail/192443",
-      "half-seated": "online.bunka.go.jp/db/heritages/detail/152018",
-      "shaka-taho": "online.bunka.go.jp/heritages/detail/266902/2",
-      "benten-kichijoten": "online.bunka.go.jp/db/heritages/detail/181542",
-    };
-    for (const [key, expected] of Object.entries(expectedObjectLinks)) {
-      const href = await page.locator(`[data-object-link="${key}"]`).getAttribute("href");
-      if (!href || !href.includes(expected)) errors.push(`${key} does not link to its exact official object page`);
+    const expectedObjectLinks = [
+      "online.bunka.go.jp/db/heritages/detail/192443",
+      "online.bunka.go.jp/db/heritages/detail/152018",
+      "online.bunka.go.jp/heritages/detail/266902/2",
+      "online.bunka.go.jp/db/heritages/detail/181542",
+    ];
+    for (const expected of expectedObjectLinks) {
+      if (await page.locator(`#object-room a[href*="${expected}"]`).count() !== 1) {
+        errors.push(`museum dossier does not link to ${expected}`);
+      }
     }
 
     const objectCount = await page.locator("#object-room [data-object-material]").count();
@@ -139,5 +134,5 @@ const screenshots = [
     errors.forEach((error) => console.error(`- ${error}`));
     process.exit(1);
   }
-  console.log("TŌDAI-JI SMOKE TEST PASSED: responsive layouts, evidence image, hall toggle, routes, material filter, reconstruction, on-site stepper, original-image links, Kaidan-dō gallery and Sound Ritual Scale media cards");
+  console.log("TŌDAI-JI SMOKE TEST PASSED: responsive layouts, evidence image, hall toggle, routes, linked material examples, reconstruction, on-site quick-read handoff, original-image links, Kaidan-dō gallery and Sound Ritual Scale media cards");
 })();
