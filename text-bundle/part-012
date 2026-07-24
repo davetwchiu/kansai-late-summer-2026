@@ -1,0 +1,244 @@
+iv></section>
+<section class="museum-detail" id="fukuju"><div class="museum-side"><div class="meta">30/8 · 16:35–17:20</div><h2>神戶酒心館 東明蔵</h2></div><div class="museum-body"><p class="deck">第三站不扮成深度酒造見學：它是當代蔵元商店、品牌和國際化的觀察點。</p><p>東明蔵2025年翻新後，以更清楚的商品陳列、無障礙動線、蔵直採り生酒和FUKUJU KEG DRAFT為重點。免費試飲、多語パンフレット和海外発送服務，說明蔵元如何把傳統轉成外國旅客可理解、可購買的體驗。</p><p>因此skip英文premium tour是正確取捨。你已有清酒背景，這裡不需再上基礎課；只需看福壽如何描述自己、限定商品與一般流通酒有何差異，以及當代「高級日本酒」怎樣被設計。</p><div class="museum-reading"><strong>離開線：</strong>17:20準時走。最多少量試飲一至兩款，買酒後回三宮休息，保護ESPICE晚餐。</div><p class="source-links"><a href="https://www.shushinkan.co.jp/toumyou/">東明蔵</a></p></div></section>
+<section class="museum-detail" id="konjyakukan"><div class="museum-side"><div class="meta">31/8 · 10:00–12:00</div><h2>大阪くらしの今昔館</h2><span class="chip core">大修前最後一日</span></div><div class="museum-body"><p class="deck">常設街區、夏祭陳設、五井金水粉本展在同一天收尾；這是本行程最不可替代的時點。</p><h3>先看江戶大阪復原街區</h3><p>不要只拍屋內。沿街比較店面開口、通り庭、灶、蔵、居住後部和鄰里關係。觀察一天光線與天候演出如何改變街區，理解町家不是孤立建築，而是城市共同體的基本單位。</p><h3>再看夏祭陳設</h3><p>祭禮不是附加裝飾。幟、提燈、御迎人形和街區準備把住宅轉成共同節慶舞台，也顯示大阪町人如何把宗教、娛樂和商業結合。</p><h3>最後看五井金水粉本</h3><p>約三千件中選出一百五十件首次展示。把「寫」理解為技術訓練：臨摹、寫生、下圖與弟子傳承不是原創之前的低階階段，而是創造如何被組織。</p><div class="museum-reading"><strong>硬時間：</strong>2026年9月1日起長期休館，8月31日也是企畫展最後一天。10:00入、12:00離，不把午餐拖成館內附屬。</div><p class="source-links"><a href="https://www.osaka-angenet.jp/konjyakukan/top">官方</a><a href="https://www.osaka-angenet.jp/konjyakukan/exhibition_special/260001432">粉本展</a></p></div></section>
+<section class="museum-detail" id="shitennoji"><div class="museum-side"><div class="meta">31/8 · 14:40–16:10</div><h2>四天王寺</h2></div><div class="museum-body"><p class="deck">它不是「原建築保存良好」的古寺；它的價值是伽藍、信仰和城市位置被反覆重建。</p><p>由南向北看中心伽藍：中門、五重塔、金堂、講堂形成軸線。現有主要建築多為戰後重建，不用迴避；反而可思考為何大阪人在多次破壞後仍按古式重建。</p><p>再看六時礼讃堂、石舞台與太子信仰。四天王寺的「古」不只在材料，而在儀式、每月縁日、施藥與救濟傳統，以及城市南北交通中長期位置。</p><div class="museum-reading"><strong>離開線：</strong>4月至9月16:30關閉。16:10開始離開；若前段延誤，刪口縄坂，不壓縮中心伽藍。</div><p class="source-links"><a href="https://www.shitennoji.or.jp/admission.html">官方拝觀</a></p></div></section></div></div></section></main><footer class="footer"><div class="wrap footer-grid"><div><strong>2026 關西晚夏旅程誌</strong><br>網站不公開訂位編號、姓名或酒店確認資料；開館、交通與菜單以出發前官方公告為準。</div><div class="updated">資料最後核對：2026-07-20</div></div></footer>
+<nav class="mobile-tools" aria-label="手機捷徑"><a href="daily.html">每日</a><a href="deep-itinerary.html">深度</a><a href="maps.html">地圖</a></nav>
+</body></html>
+<<<END:museums.html>>>
+
+<<<FILE:data/itinerary.json>>>
+{
+  "title": "2026 關西晚夏旅程誌",
+  "dates": {
+    "start": "2026-08-26",
+    "end": "2026-09-02"
+  },
+  "base": "InterContinental Osaka",
+  "days": [
+    {
+      "id": "d0826",
+      "date": "26/8",
+      "weekday": "Wed",
+      "title": "抵達大阪",
+      "summary": "到埗與安頓",
+      "items": [
+        {
+          "time": "12:55",
+          "title": "CX596 抵達關西空港"
+        },
+        {
+          "time": "下午",
+          "title": "前往 InterContinental Osaka、入住及休息"
+        },
+        {
+          "time": "19:00",
+          "title": "ジュンジーノ"
+        }
+      ],
+      "notes": [
+        "第一晚不加景點。",
+        "航班、入境或交通延誤，先保留晚餐。"
+      ],
+      "tags": [
+        "抵達",
+        "晚餐"
+      ]
+    },
+    {
+      "id": "d0827",
+      "date": "27/8",
+      "weekday": "Thu",
+      "title": "奈良 full day",
+      "summary": "佛畫、寺院與庭園",
+      "items": [
+        {
+          "time": "08:00",
+          "title": "由大阪出發"
+        },
+        {
+          "time": "09:30–12:30",
+          "title": "奈良國立博物館：南都仏画、佛像館"
+        },
+        {
+          "time": "12:30–13:30",
+          "title": "うな菊 奈良本店"
+        },
+        {
+          "time": "13:45–14:05",
+          "title": "東大寺ミュージアム快速補充"
+        },
+        {
+          "time": "14:05–15:30",
+          "title": "東大寺：南大門、大佛殿、三月堂／二月堂"
+        },
+        {
+          "time": "15:45–16:45",
+          "title": "依水園／寧樂美術館"
+        },
+        {
+          "time": "17:00",
+          "title": "近鐵奈良出發"
+        },
+        {
+          "time": "19:00",
+          "title": "旨い料理・旨い酒 じょうじ"
+        }
+      ],
+      "notes": [
+        "核心：奈良國博、東大寺本體、19:00晚餐。",
+        "先刪：東大寺博物館。",
+        "依水園16:00前必須入場。"
+      ],
+      "tags": [
+        "日遊",
+        "博物館",
+        "寺院"
+      ]
+    },
+    {
+      "id": "d0828",
+      "date": "28/8",
+      "weekday": "Fri",
+      "title": "堺：茶湯、刃物、鉄炮",
+      "summary": "由宿院向北推進",
+      "items": [
+        {
+          "time": "09:30",
+          "title": "大阪出發"
+        },
+        {
+          "time": "10:30–11:45",
+          "title": "さかい利晶の杜"
+        },
+        {
+          "time": "11:45–12:20",
+          "title": "宿院、大道筋、千利休屋敷跡短行"
+        },
+        {
+          "time": "12:30–13:30",
+          "title": "弥助"
+        },
+        {
+          "time": "13:50–14:45",
+          "title": "堺伝匠館／堺刃物ミュージアム CUT"
+        },
+        {
+          "time": "15:05–16:00",
+          "title": "鉄炮鍛冶屋敷"
+        },
+        {
+          "time": "16:00",
+          "title": "由七道／高須神社離開"
+        },
+        {
+          "time": "18:30",
+          "title": "しまなみふれんち Murakami"
+        }
+      ],
+      "notes": [
+        "不回宿院。",
+        "酷熱時，堺伝匠館至鍛冶屋敷改搭阪堺線。",
+        "買刀不能影響15:05入館。"
+      ],
+      "tags": [
+        "半日",
+        "工藝",
+        "壽司"
+      ]
+    },
+    {
+      "id": "d0829",
+      "date": "29/8",
+      "weekday": "Sat",
+      "title": "大阪餐飲日",
+      "summary": "日本酒 pairing 與長休",
+      "items": [
+        {
+          "time": "上午",
+          "title": "留白、慢早餐"
+        },
+        {
+          "time": "12:00–14:30",
+          "title": "ritmicita：日本酒 pairing full course"
+        },
+        {
+          "time": "下午",
+          "title": "回酒店補水、休息"
+        },
+        {
+          "time": "20:30",
+          "title": "炭火いわ田"
+        }
+      ],
+      "notes": [
+        "兩餐都重。",
+        "下午不插大和文華館。",
+        "黑松露偏好已註明為不喜歡。"
+      ],
+      "tags": [
+        "餐飲主日",
+        "休息"
+      ]
+    },
+    {
+      "id": "d0830",
+      "date": "30/8",
+      "weekday": "Sun",
+      "title": "神戶：木工與灘五鄉",
+      "summary": "工具、釀造與晚餐",
+      "items": [
+        {
+          "time": "09:30–11:15",
+          "title": "竹中大工道具館"
+        },
+        {
+          "time": "11:15–12:15",
+          "title": "落三宮／中山手通 buffer"
+        },
+        {
+          "time": "12:30–13:45",
+          "title": "トンカツとワイン 日月"
+        },
+        {
+          "time": "13:45–14:25",
+          "title": "前往白鶴"
+        },
+        {
+          "time": "14:25–15:10",
+          "title": "白鶴酒造資料館"
+        },
+        {
+          "time": "15:20–16:20",
+          "title": "菊正宗酒造記念館"
+        },
+        {
+          "time": "16:35–17:20",
+          "title": "福壽／神戶酒心館 東明蔵"
+        },
+        {
+          "time": "17:20–18:55",
+          "title": "返回三宮、休息"
+        },
+        {
+          "time": "19:00",
+          "title": "エスピス"
+        }
+      ],
+      "notes": [
+        "福壽英文 tour 已刪。",
+        "酒藏試飲要克制。",
+        "竹中當日只有常設展。"
+      ],
+      "tags": [
+        "日遊",
+        "木工",
+        "清酒"
+      ]
+    },
+    {
+      "id": "d0831",
+      "date": "31/8",
+      "weekday": "Mon",
+      "title": "大阪生活史與四天王寺",
+      "summary": "大修前最後開館日",
+      "item
