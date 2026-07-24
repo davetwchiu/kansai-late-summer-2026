@@ -5,7 +5,7 @@
     if (!document.querySelector('link[href*="todaiji-kaidando-gallery.css"]')) {
       const style = document.createElement('link');
       style.rel = 'stylesheet';
-      style.href = 'assets/todaiji-kaidando-gallery.css?v=20260724-1';
+      style.href = 'assets/todaiji-kaidando-gallery.css?v=20260724-2';
       document.head.appendChild(style);
     }
 
@@ -14,6 +14,9 @@
     const copy = kaidando.querySelector('.stop-copy');
     const guardianGrid = copy?.querySelector('.guardian-grid');
     if (!copy || !guardianGrid) return;
+
+    kaidando.classList.add('kaidando-gallery-expanded');
+    kaidando.querySelector('.material-note')?.remove();
 
     const commons = (filename, width) => {
       const encoded = encodeURIComponent(filename);
@@ -49,7 +52,10 @@
     gallery.innerHTML = `
       <header>
         <div><span>Four Heavenly Kings · visual comparison</span><h4>四尊要並排比較，才看得出泥塑身體的差異</h4></div>
-        <p>四像同為8世紀國寶塑像，約1.6米高，立於戒壇堂壇上四角。先看整體群像節奏，再逐尊比較面相、重心、持物、甲冑與邪鬼。</p>
+        <div class="kaidando-gallery-intro">
+          <p>四像同為8世紀國寶塑像，約1.6米高，立於戒壇堂壇上四角。先看整體群像節奏，再逐尊比較面相、重心、持物、甲冑與邪鬼。</p>
+          <p><strong>塑造（そぞう）：</strong>木骨作芯、纏上草繩，再由粗泥建立體量、細泥完成眼皮、面頰、手指與衣褶，乾燥後施彩。泥的可塑性保留壓、捏、抹留下的柔和過渡；重量大、質地脆、怕震，裂縫與修補亦成為作品保存史的一部分。</p>
+        </div>
       </header>
       <div class="four-kings-grid">
         ${kings.map((king) => {
@@ -73,7 +79,7 @@
         <a href="https://imagedb.narahaku.go.jp/005180-000-000.html" target="_blank" rel="noopener">奈良國立博物館：四天王像資料與攝影原板記錄 ↗</a>
       </footer>`;
 
-    guardianGrid.insertAdjacentElement('afterend', gallery);
+    copy.insertAdjacentElement('afterend', gallery);
   };
 
   if (document.readyState === 'complete') init();
