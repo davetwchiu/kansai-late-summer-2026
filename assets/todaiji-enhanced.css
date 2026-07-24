@@ -25,11 +25,15 @@
 .hall-compare .hall-outline{position:absolute;bottom:35px;left:50%;transform:translateX(-50%);transition:width .35s ease,opacity .35s ease,border-color .35s ease,background .35s ease}
 .hall-compare .hall-old{width:100%;max-width:980px;height:245px;border:4px solid var(--navy);background:rgba(24,55,70,.04)}
 .hall-compare .hall-current{width:65%;max-width:637px;height:235px;border:4px solid var(--todaiji-copper);background:rgba(163,69,49,.10)}
-.hall-compare .hall-outline span{position:absolute;left:12px;top:10px;background:rgba(255,253,248,.92);padding:4px 8px;font-size:.76rem;font-weight:700}
+.hall-compare .hall-outline span{position:absolute;left:50%;top:56%;transform:translate(-50%,-50%);background:rgba(255,253,248,.94);padding:6px 10px;font-size:.8rem;font-weight:700;white-space:nowrap;z-index:2;transition:opacity .2s ease}
 .hall-stage[data-hall-view="current"] .hall-old{opacity:.18}
 .hall-stage[data-hall-view="current"] .hall-current{opacity:1}
+.hall-stage[data-hall-view="current"] .hall-old span{opacity:0}
+.hall-stage[data-hall-view="current"] .hall-current span{opacity:1}
 .hall-stage[data-hall-view="ancient"] .hall-old{opacity:1}
 .hall-stage[data-hall-view="ancient"] .hall-current{opacity:.18}
+.hall-stage[data-hall-view="ancient"] .hall-old span{opacity:1}
+.hall-stage[data-hall-view="ancient"] .hall-current span{opacity:0}
 .hall-toggle{display:flex;gap:8px;margin:18px 0 12px}
 .hall-toggle button{border:1px solid #a99f91;background:var(--card);color:var(--navy);padding:9px 15px;border-radius:999px;font-weight:700}
 .hall-toggle button.active{background:var(--todaiji-copper);border-color:var(--todaiji-copper);color:#fff}
@@ -89,6 +93,7 @@ body[data-reading-mode="field"] #field-checklist{padding-top:42px}
   .hall-compare .hall-stage{min-height:260px;padding:20px}
   .hall-compare .hall-old{height:190px;bottom:25px}
   .hall-compare .hall-current{height:180px;bottom:25px}
+  .hall-compare .hall-outline span{font-size:.7rem;padding:5px 8px}
   #object-room .object-grid article.visual{grid-template-columns:105px 1fr;column-gap:14px}
   .field-stepper>article{padding:22px}
   .field-step-head h3{font-size:1.55rem}
