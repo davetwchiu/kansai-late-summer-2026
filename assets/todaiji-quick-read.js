@@ -93,6 +93,12 @@
         deepScript.defer = true;
         document.head.appendChild(deepScript);
       }
+      if (!document.querySelector('script[src*="todaiji-kaidando-gallery.js"]')) {
+        const galleryScript = document.createElement('script');
+        galleryScript.src = 'assets/todaiji-kaidando-gallery.js?v=20260724-1';
+        galleryScript.defer = true;
+        document.head.appendChild(galleryScript);
+      }
     }
   };
 
