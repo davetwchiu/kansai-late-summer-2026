@@ -1,4 +1,4 @@
-const CACHE_NAME = "kansai-todaiji-v11";
+const CACHE_NAME = "kansai-todaiji-v12";
 const CORE = [
   "./todaiji.html",
   "./museums.html",
@@ -6,11 +6,13 @@ const CORE = [
   "./assets/todaiji-enhanced.css?v=20260724-2",
   "./assets/todaiji-quick-read.css?v=20260724-1",
   "./assets/todaiji-deep-stations.css?v=20260724-1",
+  "./assets/todaiji-kaidando-gallery.css?v=20260724-1",
   "./assets/site.js",
   "./assets/todaiji.js",
   "./assets/todaiji-media-audit.js",
   "./assets/todaiji-quick-read.js?v=20260724-1",
   "./assets/todaiji-deep-stations.js?v=20260724-1",
+  "./assets/todaiji-kaidando-gallery.js?v=20260724-1",
   "./assets/images/todaiji/daibutsuden.webp",
   "./assets/images/todaiji/nandaimon-structure.webp",
   "./assets/images/todaiji/nio-ungyo.webp",
