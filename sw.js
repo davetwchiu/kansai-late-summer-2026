@@ -1,10 +1,11 @@
-const CACHE_NAME = "kansai-todaiji-v8";
+const CACHE_NAME = "kansai-todaiji-v9";
 const CORE = [
   "./todaiji.html",
   "./assets/style.css?v=20260723-2",
   "./assets/todaiji-enhanced.css?v=20260724-2",
   "./assets/site.js",
   "./assets/todaiji.js",
+  "./assets/todaiji-media-audit.js",
   "./assets/images/todaiji/daibutsuden.webp",
   "./assets/images/todaiji/nandaimon-structure.webp",
   "./assets/images/todaiji/nio-ungyo.webp",
