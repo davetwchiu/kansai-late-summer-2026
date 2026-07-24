@@ -99,6 +99,12 @@
         galleryScript.defer = true;
         document.head.appendChild(galleryScript);
       }
+      if (!document.querySelector('script[src*="todaiji-sound-ritual.js"]')) {
+        const soundScript = document.createElement('script');
+        soundScript.src = 'assets/todaiji-sound-ritual.js?v=20260724-1';
+        soundScript.defer = true;
+        document.head.appendChild(soundScript);
+      }
     }
   };
 
