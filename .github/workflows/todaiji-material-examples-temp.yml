@@ -1,0 +1,71 @@
+name: Temporary Tōdai-ji material examples patch
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/todaiji-material-examples
+          fetch-depth: 0
+      - name: Simplify material microscope and add examples
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          html = Path('todaiji.html')
+          text = html.read_text()
+          replacement = '''  <section class="section material-lab" id="materials">
+    <div class="wrap">
+      <div class="section-heading"><div class="label">Material microscope</div><div><h2>先認技法，現場才看得到表面差異</h2><p>四種工法直接對照東大寺實例。先記住材料、製作次序與代表像，現場再看重量感、接縫、殘彩與修補痕跡。</p></div></div>
+      <div class="technique-grid">
+        <article data-material-card="clay"><span>塑造</span><h3>木骨 → 草繩 → 粗泥 → 細泥 → 彩色</h3><p>優勢是細微塑形；弱點是重、脆、怕震。看眼皮、面頰、手指與衣褶的柔軟過渡。</p><p class="technique-example"><strong>東大寺例：</strong><a href="https://www.todaiji.or.jp/information/kaidando/" target="_blank" rel="noopener">戒壇堂四天王立像 ↗</a></p></article>
+        <article data-material-card="lacquer"><span>脫活乾漆</span><h3>泥胎 → 麻布髹漆 → 抽泥 → 木構補強</h3><p>較泥塑輕，材料與人工極昂貴。看漆層形成的連續曲面、貼附裝飾與空心結構。</p><p class="technique-example"><strong>東大寺例：</strong><a href="https://www.todaiji.or.jp/information/hokkedo/" target="_blank" rel="noopener">法華堂不空羂索觀音立像 ↗</a></p></article>
+        <article data-material-card="wood"><span>木造寄木</span><h3>多木塊分工雕刻 → 組裝 → 表面整合</h3><p>容許大型造像並行製作，也方便乾燥、搬運與修理。看接合、深鑿衣紋與外張動勢。</p><p class="technique-example"><strong>東大寺例：</strong><a href="https://www.todaiji.or.jp/information/nandaimon/" target="_blank" rel="noopener">南大門金剛力士立像（阿形・吽形） ↗</a></p></article>
+        <article data-material-card="bronze"><span>鑄銅</span><h3>內外模 → 留銅壁 → 分段澆鑄 → 補鑄</h3><p>巨像的技術問題在熱、流動、收縮與接縫。看金屬色、厚度、鑄接與後代修補。</p><p class="technique-example"><strong>東大寺例：</strong><a href="https://www.todaiji.or.jp/information/daibutsuden/" target="_blank" rel="noopener">盧舍那大佛 ↗</a> · <a href="https://www.todaiji.or.jp/kids/kids2-2.html" target="_blank" rel="noopener">官方鑄造圖解 ↗</a></p></article>
+      </div>
+    </div>
+  </section>'''
+          pattern = re.compile(r'  <section class="section material-lab" id="materials">.*?  </section>\n\n(?=  <section class="section alt" id="object-room">)', re.S)
+          text, count = pattern.subn(replacement + '\n\n', text, count=1)
+          if count != 1:
+              raise SystemExit(f'material section replacement count: {count}')
+          html.write_text(text)
+
+          sw = Path('sw.js')
+          sw_text = sw.read_text()
+          if 'kansai-todaiji-v14' not in sw_text:
+              raise SystemExit('expected cache version v14 missing')
+          sw.write_text(sw_text.replace('kansai-todaiji-v14', 'kansai-todaiji-v15', 1))
+
+          test = Path('scripts/test_todaiji_material_examples.py')
+          test.write_text('''from pathlib import Path\n\nfrom bs4 import BeautifulSoup\n\nhtml = Path("todaiji.html").read_text()\nsoup = BeautifulSoup(html, "html.parser")\nsection = soup.select_one("#materials")\nassert section is not None\nassert not section.select("[data-material-filter]"), "material filter buttons must remain removed"\ncards = section.select("[data-material-card]")\nassert len(cards) == 4\nexpected = {\n    "clay": "戒壇堂四天王立像",\n    "lacquer": "法華堂不空羂索觀音立像",\n    "wood": "南大門金剛力士立像",\n    "bronze": "盧舍那大佛",\n}\nfor card in cards:\n    key = card.get("data-material-card")\n    example = card.select_one(".technique-example")\n    assert example is not None, f"missing example for {key}"\n    link = example.select_one("a[href]")\n    assert link is not None and link["href"].startswith("https://"), f"missing link for {key}"\n    assert expected[key] in example.get_text(" ", strip=True)\n''')
+          PY
+      - name: Validate
+        run: |
+          node --check assets/todaiji.js
+          node --check sw.js
+          python -m pip install --quiet beautifulsoup4
+          python scripts/validate_site.py
+          python scripts/test_todaiji_material_examples.py
+      - name: Commit to feature branch
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add todaiji.html sw.js scripts/test_todaiji_material_examples.py
+          if git diff --cached --quiet; then
+            echo "No patch needed"
+          else
+            git commit -m "Simplify Tōdai-ji material microscope"
+            git push origin HEAD:fix/todaiji-material-examples
+          fi
