@@ -66,10 +66,10 @@ const screenshots = [
 
     await page.locator("[data-reading-mode-toggle]").click();
     const allImages = await page.locator("main img").count();
-    const linkedImages = await page.locator("main a.image-original-link > img, main a.four-king-image > img").count();
+    const linkedImages = await page.locator("main a.image-original-link > img, main a.four-king-image > img, main .sound-card-image > a > img").count();
     if (allImages === 0) errors.push("Tōdai-ji page contains no content images");
     if (linkedImages !== allImages) errors.push(`${allImages - linkedImages} content images are not linked to their complete image`);
-    const firstImageLink = page.locator("main a.image-original-link, main a.four-king-image").first();
+    const firstImageLink = page.locator("main a.image-original-link, main a.four-king-image, main .sound-card-image > a").first();
     if (await firstImageLink.getAttribute("target") !== "_blank") errors.push("image link does not open separately");
     if (!await firstImageLink.getAttribute("href")) errors.push("image link has no original-image URL");
 
@@ -92,6 +92,29 @@ const screenshots = [
     for (const phrase of ["塑造（そぞう）", "木骨作芯", "粗泥", "細泥", "怕震"]) {
       if (!galleryText.includes(phrase)) errors.push(`Kaidan-dō integrated material explanation is missing: ${phrase}`);
     }
+
+    const soundCards = page.locator("#sound [data-sound-card]");
+    if (await soundCards.count() !== 4) errors.push("Sound, Ritual, Scale does not contain four enhanced media cards");
+    for (const key of ["shomyo", "nara-taro", "omigui", "shunie-recording"]) {
+      const card = page.locator(`#sound [data-sound-card="${key}"]`);
+      if (await card.count() !== 1) errors.push(`missing Sound, Ritual, Scale card: ${key}`);
+      if (await card.locator("figure img").count() !== 1) errors.push(`${key} does not contain an image`);
+    }
+    const expectedPlayers = {
+      "nara-taro": "QmBk12w649s",
+      "omigui": "eUj8tb6q1z0",
+      "shunie-recording": "n7FU3r4Nlek",
+    };
+    for (const [key, videoId] of Object.entries(expectedPlayers)) {
+      const src = await page.locator(`#sound [data-sound-card="${key}"] iframe`).getAttribute("src");
+      if (!src || !src.includes(`youtube-nocookie.com/embed/${videoId}`)) errors.push(`${key} does not embed the requested YouTube video`);
+    }
+    const shomyoHref = await page.locator('#sound [data-sound-card="shomyo"] .external-player-panel a').getAttribute("href");
+    if (!shomyoHref || !shomyoHref.includes("www2.ntj.jac.go.jp/dglib/contents/learn/edc28/miru/temple/s_11.html")) errors.push("Kegon shōmyō card does not retain the original player link");
+    const recordingTitle = await page.locator('#sound [data-sound-card="shunie-recording"] h3').innerText();
+    if (recordingTitle !== "修二會現地錄音") errors.push("Shuni-e recording card title was not simplified");
+    const playlistSrc = await page.locator('#sound [data-sound-card="shunie-recording"] iframe').getAttribute("src");
+    if (!playlistSrc || !playlistSrc.includes("list=PLRbGqqBTO3HaZoQ2Keur6W5LOjqaS_Vyn")) errors.push("Shuni-e recording player does not retain the requested playlist");
 
     const expectedObjectLinks = {
       "birth-buddha": "online.bunka.go.jp/db/heritages/detail/192443",
@@ -116,5 +139,5 @@ const screenshots = [
     errors.forEach((error) => console.error(`- ${error}`));
     process.exit(1);
   }
-  console.log("TŌDAI-JI SMOKE TEST PASSED: responsive layouts, evidence image, hall toggle, routes, material filter, reconstruction, on-site stepper, original-image links and full-width Kaidan-dō Four Heavenly Kings gallery");
+  console.log("TŌDAI-JI SMOKE TEST PASSED: responsive layouts, evidence image, hall toggle, routes, material filter, reconstruction, on-site stepper, original-image links, Kaidan-dō gallery and Sound Ritual Scale media cards");
 })();
