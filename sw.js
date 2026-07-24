@@ -1,4 +1,4 @@
-const CACHE_NAME = "kansai-todaiji-v7";
+const CACHE_NAME = "kansai-todaiji-v8";
 const CORE = [
   "./todaiji.html",
   "./assets/style.css?v=20260723-2",
