@@ -1,4 +1,4 @@
-const CACHE_NAME = "kansai-todaiji-v17";
+const CACHE_NAME = "kansai-todaiji-v18";
 const CORE = [
   "./todaiji.html",
   "./museums.html",
