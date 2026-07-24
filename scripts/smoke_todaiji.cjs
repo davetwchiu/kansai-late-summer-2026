@@ -66,12 +66,21 @@ const screenshots = [
 
     await page.locator("[data-reading-mode-toggle]").click();
     const allImages = await page.locator("main img").count();
-    const linkedImages = await page.locator("main a.image-original-link > img").count();
+    const linkedImages = await page.locator("main a.image-original-link > img, main a.four-king-image > img").count();
     if (allImages === 0) errors.push("Tōdai-ji page contains no content images");
     if (linkedImages !== allImages) errors.push(`${allImages - linkedImages} content images are not linked to their complete image`);
-    const firstImageLink = page.locator("main a.image-original-link").first();
+    const firstImageLink = page.locator("main a.image-original-link, main a.four-king-image").first();
     if (await firstImageLink.getAttribute("target") !== "_blank") errors.push("image link does not open separately");
     if (!await firstImageLink.getAttribute("href")) errors.push("image link has no original-image URL");
+
+    const kingCards = page.locator("#kaidando-four-kings [data-four-king]");
+    if (await kingCards.count() !== 4) errors.push("Kaidan-dō gallery does not contain four guardian cards");
+    for (const king of ["持國天", "增長天", "廣目天", "多聞天"]) {
+      const card = page.locator(`#kaidando-four-kings [data-four-king="${king}"]`);
+      if (await card.count() !== 1) errors.push(`missing Kaidan-dō image card for ${king}`);
+      const href = await card.locator("a.four-king-image").getAttribute("href");
+      if (!href || !href.includes("commons.wikimedia.org/wiki/Special:Redirect/file/")) errors.push(`${king} does not link to a full Commons image`);
+    }
 
     const expectedObjectLinks = {
       "birth-buddha": "online.bunka.go.jp/db/heritages/detail/192443",
@@ -96,5 +105,5 @@ const screenshots = [
     errors.forEach((error) => console.error(`- ${error}`));
     process.exit(1);
   }
-  console.log("TŌDAI-JI SMOKE TEST PASSED: responsive layouts, evidence image, hall toggle, routes, material filter, reconstruction, on-site stepper and original-image links");
+  console.log("TŌDAI-JI SMOKE TEST PASSED: responsive layouts, evidence image, hall toggle, routes, material filter, reconstruction, on-site stepper, original-image links and Kaidan-dō Four Heavenly Kings gallery");
 })();
