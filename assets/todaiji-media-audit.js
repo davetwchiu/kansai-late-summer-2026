@@ -22,8 +22,9 @@
     },
     {
       match: '菩薩半跏像',
-      image: ['https://commons.wikimedia.org/wiki/File:Nyoirin-kanon.png', 'Wikimedia Commons：東大寺如意輪觀音半跏像原圖'],
-      data: [['https://online.bunka.go.jp/db/heritages/detail/152018', '文化庁：作品資料']]
+      image: null,
+      note: '暫未找到可核實、確屬東大寺此像的公開圖片；同名或近似圖容易連錯作品。',
+      data: [['https://online.bunka.go.jp/db/heritages/detail/152018', '文化庁：東大寺此像的作品資料']]
     },
     {
       match: '釋迦／多寶如來坐像',
@@ -33,6 +34,7 @@
     {
       match: '辯才天、吉祥天',
       image: ['https://commons.wikimedia.org/wiki/File:Todaiji_Kisshoten.jpg', 'Wikimedia Commons：東大寺吉祥天公海圖'],
+      note: '此連結只顯示吉祥天；暫未找到可核實的兩像同框公開圖。',
       data: [['https://online.bunka.go.jp/db/heritages/detail/181542', '文化庁：弁財天・吉祥天作品資料（該頁未必顯示圖片）']]
     },
     {
@@ -60,9 +62,17 @@
       card.appendChild(source);
     }
 
-    const imageLink = `<a class="verified-image-link" data-verified-image="true" href="${entry.image[0]}" target="_blank" rel="noopener">${entry.image[1]} ↗</a>`;
-    const dataLinks = entry.data.map(([href, label]) => `<a class="verified-data-link" href="${href}" target="_blank" rel="noopener">${label} ↗</a>`).join(' · ');
-    source.innerHTML = `${imageLink}${dataLinks ? ` · ${dataLinks}` : ''}`;
+    const parts = [];
+    if (entry.image) {
+      parts.push(`<a class="verified-image-link" data-verified-image="true" href="${entry.image[0]}" target="_blank" rel="noopener">${entry.image[1]} ↗</a>`);
+    } else {
+      parts.push(`<span class="image-unavailable" data-image-unavailable="true">${entry.note}</span>`);
+    }
+    if (entry.image && entry.note) parts.push(`<span class="image-scope-note">${entry.note}</span>`);
+    entry.data.forEach(([href, label]) => {
+      parts.push(`<a class="verified-data-link" href="${href}" target="_blank" rel="noopener">${label} ↗</a>`);
+    });
+    source.innerHTML = parts.join(' · ');
     card.dataset.mediaAudited = 'true';
   });
 
@@ -76,9 +86,15 @@
     }
   });
 
-  const missingCards = cards.filter((card) => !card.querySelector('[data-verified-image="true"]'));
-  if (cards.length !== mediaByTitle.length || missingCards.length) {
-    const names = missingCards.map((card) => card.querySelector('h3')?.textContent.trim() || '未命名').join('、');
-    console.error(`Tōdai-ji media audit failed: ${cards.length}/${mediaByTitle.length} cards; missing verified image links: ${names}`);
+  const unauditedCards = cards.filter((card) => card.dataset.mediaAudited !== 'true');
+  const pageImages = Array.from(document.querySelectorAll('main img'));
+  const imagesWithoutOriginal = pageImages.filter((image) => {
+    const link = image.closest('a.image-original-link');
+    return !link || !link.href || link.href.startsWith(`${window.location.origin}${window.location.pathname.replace(/[^/]+$/, '')}assets/`);
+  });
+
+  if (cards.length !== mediaByTitle.length || unauditedCards.length || imagesWithoutOriginal.length) {
+    const cardNames = unauditedCards.map((card) => card.querySelector('h3')?.textContent.trim() || '未命名').join('、');
+    console.error(`Tōdai-ji media audit failed: ${cards.length}/${mediaByTitle.length} cards; unaudited cards: ${cardNames}; images without external originals: ${imagesWithoutOriginal.length}`);
   }
 })();
