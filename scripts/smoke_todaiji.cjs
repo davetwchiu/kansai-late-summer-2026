@@ -64,6 +64,15 @@ const screenshots = [
     if (firstTitle === secondTitle) errors.push("next-stop control did not change the field step");
     if (await page.locator("[data-field-progress-label]").innerText() !== "2 / 6") errors.push("field progress did not update");
 
+    await page.locator("[data-reading-mode-toggle]").click();
+    const allImages = await page.locator("main img").count();
+    const linkedImages = await page.locator("main a.image-original-link > img").count();
+    if (allImages === 0) errors.push("Tōdai-ji page contains no content images");
+    if (linkedImages !== allImages) errors.push(`${allImages - linkedImages} content images are not linked to their complete image`);
+    const firstImageLink = page.locator("main a.image-original-link").first();
+    if (await firstImageLink.getAttribute("target") !== "_blank") errors.push("image link does not open separately");
+    if (!await firstImageLink.getAttribute("href")) errors.push("image link has no original-image URL");
+
     const objectCount = await page.locator("#object-room [data-object-material]").count();
     if (objectCount !== 8) errors.push(`museum dossier contains ${objectCount} object cards`);
     await page.close();
@@ -76,5 +85,5 @@ const screenshots = [
     errors.forEach((error) => console.error(`- ${error}`));
     process.exit(1);
   }
-  console.log("TŌDAI-JI SMOKE TEST PASSED: responsive layouts, evidence image, hall toggle, routes, material filter, reconstruction and on-site stepper");
+  console.log("TŌDAI-JI SMOKE TEST PASSED: responsive layouts, evidence image, hall toggle, routes, material filter, reconstruction, on-site stepper and original-image links");
 })();

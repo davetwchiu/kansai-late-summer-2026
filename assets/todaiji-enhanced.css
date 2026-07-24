@@ -81,6 +81,17 @@ body[data-reading-mode="field"] #routes [data-route-panel="full"]{display:none!i
 body[data-reading-mode="field"] #routes [data-route-panel="compact"]{display:block!important}
 body[data-reading-mode="field"] #field-checklist{padding-top:42px}
 
+/* Cropped presentation remains, while the whole image links to the complete source image. */
+.image-original-link{position:relative;display:block;min-width:0;color:inherit;overflow:hidden;cursor:zoom-in}
+.image-original-link>img{display:block;width:100%;height:100%}
+.image-original-link::after{content:"查看原圖 ↗";position:absolute;right:10px;bottom:10px;padding:6px 9px;border-radius:999px;background:rgba(14,43,46,.88);color:#fff;font-size:.7rem;font-weight:700;letter-spacing:.04em;opacity:0;transform:translateY(4px);transition:opacity .18s ease,transform .18s ease;pointer-events:none}
+.image-original-link:hover::after,.image-original-link:focus-visible::after{opacity:1;transform:none}
+.image-original-link:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.todaiji-hero-art>.image-original-link{position:absolute;inset:0}
+.lotus-evidence>.image-original-link{background:#111}
+#object-room figure>.image-original-link{height:auto}
+#object-room figure>.image-original-link>img{height:auto;aspect-ratio:3/4;object-fit:cover}
+
 @media(max-width:900px){
   .kegon-grid{grid-template-columns:1fr!important;gap:28px!important}
   .lotus-evidence{grid-column:1;grid-row:auto}
