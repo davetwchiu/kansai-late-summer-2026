@@ -180,7 +180,7 @@ for source_page in ('daily.html','deep-itinerary.html','culture.html','museums.h
         errors.append(f'{source_page}: missing cross-link to Tōdai-ji special page')
 
 todaiji_js=(ROOT/'assets/todaiji.js').read_text(encoding='utf-8')
-for marker in ('data-reading-mode', 'data-route-select', 'data-material-filter', 'serviceWorker'):
+for marker in ('data-reading-mode', 'data-route-select', 'data-reconstruction', 'serviceWorker'):
     if marker not in todaiji_js:
         errors.append(f'assets/todaiji.js: missing interaction marker {marker}')
 try:

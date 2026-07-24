@@ -220,9 +220,9 @@ body::before{display:none}
 .hall-compare label{display:flex;justify-content:space-between;margin-top:22px;font-weight:700;color:var(--navy)}
 .hall-compare input{width:100%;accent-color:var(--todaiji-copper)}
 .hall-compare>p{font-size:.87rem;color:var(--muted)}
-.route-switcher,.material-controls,.reconstruction-switch{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
-.route-switcher button,.material-controls button,.reconstruction-switch button{border:1px solid #a99f91;background:var(--card);color:var(--navy);padding:8px 14px;border-radius:999px;font-weight:700;font-size:.84rem}
-.route-switcher button.active,.material-controls button.active,.reconstruction-switch button.active{background:var(--todaiji-copper);border-color:var(--todaiji-copper);color:#fff}
+.route-switcher,.reconstruction-switch{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.route-switcher button,.reconstruction-switch button{border:1px solid #a99f91;background:var(--card);color:var(--navy);padding:8px 14px;border-radius:999px;font-weight:700;font-size:.84rem}
+.route-switcher button.active,.reconstruction-switch button.active{background:var(--todaiji-copper);border-color:var(--todaiji-copper);color:#fff}
 .route-panel{background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow)}
 .route-summary{display:grid;grid-template-columns:110px 1fr 1fr;gap:18px;padding:20px 24px;background:#173b3a;color:#e4ece9;align-items:start}
 .route-summary strong{color:#f0d393}
@@ -375,7 +375,7 @@ body[data-reading-mode="field"] .back-to-top{display:none}
   .hall-outline{transition:none}
 }
 @media print{
-  .todaiji-local-nav,.todaiji-hero-actions,.route-switcher,.material-controls,.reconstruction-switch,.video-frame,.field-actions{display:none}
+  .todaiji-local-nav,.todaiji-hero-actions,.route-switcher,.reconstruction-switch,.video-frame,.field-actions{display:none}
   .todaiji-hero{min-height:0;background:#fff;color:#000}
   .todaiji-hero-art{display:none}.todaiji-hero-grid{display:block;padding:24px}.todaiji-hero .lede,.todaiji-kana{color:#000}
   .todaiji-stop{break-inside:avoid;box-shadow:none}
