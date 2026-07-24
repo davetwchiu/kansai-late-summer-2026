@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -17,6 +17,38 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  patch-todaiji-materials:
+    if: github.event_name == 'pull_request' && github.head_ref == 'fix/todaiji-material-examples'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out material patch branch
+        uses: actions/checkout@v7
+        with:
+          ref: fix/todaiji-material-examples
+          fetch-depth: 0
+      - name: Apply material microscope patch
+        run: python scripts/patch_todaiji_material_examples.py
+      - name: Install validator dependency
+        run: python -m pip install --disable-pip-version-check beautifulsoup4
+      - name: Validate patch
+        run: |
+          node --check assets/todaiji.js
+          node --check sw.js
+          python scripts/validate_site.py
+          python scripts/test_todaiji_material_examples.py
+      - name: Commit patch to feature branch
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add todaiji.html sw.js scripts/test_todaiji_material_examples.py
+          if git diff --cached --quiet; then
+            echo "No patch needed"
+          else
+            git commit -m "Simplify Tōdai-ji material microscope"
+            git push origin HEAD:fix/todaiji-material-examples
+          fi
+
   validate:
     runs-on: ubuntu-latest
     steps:
