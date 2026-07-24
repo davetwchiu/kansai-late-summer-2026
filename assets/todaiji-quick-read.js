@@ -69,7 +69,7 @@
       }
 
       const notice = museumEntry.querySelector('.notice.sage');
-      if (notice) notice.innerHTML = '<strong>背景深讀：</strong><a href="todaiji.html">東大寺特別專頁</a>保留重建史、華嚴思想、造像材料、文物圖像與逐站研究；現場操作集中在下方速讀器。';
+      if (notice) notice.innerHTML = '<strong>背景深讀：</strong><a href="todaiji.html#deep-stations">東大寺特別專頁的逐站深讀</a>處理歷史、華嚴思想、造像材料與作品背景；現場操作集中在下方速讀器。';
 
       let quickRead = museumEntry.querySelector('#todaiji-quick-read');
       if (!quickRead) {
@@ -85,7 +85,13 @@
     if (specialPage) {
       const wrap = document.querySelector('#field-checklist .wrap');
       if (wrap) {
-        wrap.innerHTML = `<div class="section-heading"><div class="label">On-site quick read</div><div><h2>現場速讀已移到「入館筆記」東大寺篇</h2><p>速讀器與入館安排放在同一處，避免特別專頁與入館筆記保存兩套版本。</p></div></div><div class="notice sage todaiji-quick-read-link"><strong>直接開啟：</strong><a class="button" href="museums.html#todaiji-quick-read">入館筆記｜東大寺現場速讀</a></div>`;
+        wrap.innerHTML = `<div class="section-heading"><div class="label">On-site quick read</div><div><h2>現場速讀已移到「入館筆記」東大寺篇</h2><p>特別專頁上方保留完整逐站深讀；速讀器與入館安排放在同一處，避免保存兩套版本。</p></div></div><div class="notice sage todaiji-quick-read-link"><strong>直接開啟：</strong><a class="button" href="museums.html#todaiji-quick-read">入館筆記｜東大寺現場速讀</a></div>`;
+      }
+      if (!document.querySelector('script[src*="todaiji-deep-stations.js"]')) {
+        const deepScript = document.createElement('script');
+        deepScript.src = 'assets/todaiji-deep-stations.js?v=20260724-1';
+        deepScript.defer = true;
+        document.head.appendChild(deepScript);
       }
     }
   };
