@@ -223,6 +223,13 @@
     if (updated) updated.textContent = '行程同步：2026-07-24';
   }
 
+  if ((document.querySelector('#nara-visit #todaiji') || document.body.classList.contains('todaiji-page')) && !document.querySelector('script[src*="todaiji-quick-read.js"]')) {
+    const quickReadScript = document.createElement('script');
+    quickReadScript.src = 'assets/todaiji-quick-read.js?v=20260724-1';
+    quickReadScript.defer = true;
+    document.head.appendChild(quickReadScript);
+  }
+
   document.body.id = document.body.id || 'top';
   document.querySelectorAll('main > .section, main > .deep-day').forEach((section) => {
     const container = section.querySelector(':scope > .wrap') || section;
