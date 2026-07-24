@@ -1,0 +1,63 @@
+name: Temporary Tōdai-ji full media audit patch
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/todaiji-full-media-audit
+          fetch-depth: 0
+      - name: Wire media audit into Tōdai-ji page
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          html = Path('todaiji.html')
+          text = html.read_text()
+          marker = '  <script defer src="assets/todaiji.js"></script>'
+          addition = marker + '\n  <script defer src="assets/todaiji-media-audit.js"></script>'
+          if 'assets/todaiji-media-audit.js' not in text:
+              if marker not in text:
+                  raise SystemExit('todaiji.js script marker missing')
+              text = text.replace(marker, addition, 1)
+              html.write_text(text)
+
+          sw = Path('sw.js')
+          text = sw.read_text()
+          text = text.replace('kansai-todaiji-v8', 'kansai-todaiji-v9')
+          marker = '  "./assets/todaiji.js",'
+          addition = marker + '\n  "./assets/todaiji-media-audit.js",'
+          if 'todaiji-media-audit.js' not in text:
+              if marker not in text:
+                  raise SystemExit('service worker script marker missing')
+              text = text.replace(marker, addition, 1)
+          sw.write_text(text)
+          PY
+      - name: Validate
+        run: |
+          node --check assets/todaiji-media-audit.js
+          node --check assets/todaiji.js
+          node --check sw.js
+          python -m pip install --quiet beautifulsoup4
+          python scripts/validate_site.py
+      - name: Commit to feature branch
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add todaiji.html sw.js assets/todaiji-media-audit.js
+          if git diff --cached --quiet; then
+            echo "No patch needed"
+          else
+            git commit -m "Wire full Tōdai-ji media audit"
+            git push origin HEAD:fix/todaiji-full-media-audit
+          fi
