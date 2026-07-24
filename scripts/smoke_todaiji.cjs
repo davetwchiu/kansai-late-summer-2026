@@ -81,6 +81,17 @@ const screenshots = [
       const href = await card.locator("a.four-king-image").getAttribute("href");
       if (!href || !href.includes("commons.wikimedia.org/wiki/Special:Redirect/file/")) errors.push(`${king} does not link to a full Commons image`);
     }
+    if (await page.locator("#kaidando > .material-note").count()) errors.push("standalone Kaidan-dō material note still consumes a layout column");
+    if (await page.locator("#kaidando-four-kings").evaluate((element) => element.parentElement?.id) !== "kaidando") {
+      errors.push("Kaidan-dō gallery is not a direct full-width child of the station card");
+    }
+    const galleryBox = await page.locator("#kaidando-four-kings").boundingBox();
+    const copyBox = await page.locator("#kaidando > .stop-copy").boundingBox();
+    if (!galleryBox || !copyBox || galleryBox.width < copyBox.width * 0.95) errors.push("Kaidan-dō gallery remains narrower than the main text");
+    const galleryText = await page.locator("#kaidando-four-kings").innerText();
+    for (const phrase of ["塑造（そぞう）", "木骨作芯", "粗泥", "細泥", "怕震"]) {
+      if (!galleryText.includes(phrase)) errors.push(`Kaidan-dō integrated material explanation is missing: ${phrase}`);
+    }
 
     const expectedObjectLinks = {
       "birth-buddha": "online.bunka.go.jp/db/heritages/detail/192443",
@@ -105,5 +116,5 @@ const screenshots = [
     errors.forEach((error) => console.error(`- ${error}`));
     process.exit(1);
   }
-  console.log("TŌDAI-JI SMOKE TEST PASSED: responsive layouts, evidence image, hall toggle, routes, material filter, reconstruction, on-site stepper, original-image links and Kaidan-dō Four Heavenly Kings gallery");
+  console.log("TŌDAI-JI SMOKE TEST PASSED: responsive layouts, evidence image, hall toggle, routes, material filter, reconstruction, on-site stepper, original-image links and full-width Kaidan-dō Four Heavenly Kings gallery");
 })();
