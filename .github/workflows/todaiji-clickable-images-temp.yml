@@ -1,0 +1,118 @@
+name: Temporary Tōdai-ji clickable image patch
+
+on:
+  push:
+    branches:
+      - fix/todaiji-clickable-images
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.event.head_commit.message == 'Add temporary clickable-image patch workflow'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/todaiji-clickable-images
+          fetch-depth: 0
+      - name: Patch Tōdai-ji image behaviour
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          js_path = Path('assets/todaiji.js')
+          js = js_path.read_text()
+          old_css_version = 'assets/todaiji-enhanced.css?v=20260724-1'
+          new_css_version = 'assets/todaiji-enhanced.css?v=20260724-2'
+          if old_css_version not in js:
+              raise SystemExit('CSS version marker not found')
+          js = js.replace(old_css_version, new_css_version, 1)
+
+          marker = '  const sources = document.querySelector("#sources .section-heading");'
+          addition = r'''
+  const linkImageToOriginal = (image) => {
+    if (!(image instanceof HTMLImageElement) || image.closest("a")) return;
+    const source = image.currentSrc || image.src;
+    if (!source) return;
+    const link = document.createElement("a");
+    link.className = "image-original-link";
+    link.href = source;
+    link.target = "_blank";
+    link.rel = "noopener";
+    link.setAttribute("aria-label", `查看完整圖片：${image.alt || "東大寺圖片"}`);
+    link.title = "查看完整圖片";
+    image.parentNode.insertBefore(link, image);
+    link.appendChild(image);
+  };
+
+  const makeContentImagesClickable = (root = document) => {
+    root.querySelectorAll?.("main img").forEach(linkImageToOriginal);
+  };
+  makeContentImagesClickable();
+  const imageObserver = new MutationObserver((records) => {
+    records.forEach((record) => record.addedNodes.forEach((node) => {
+      if (!(node instanceof Element)) return;
+      if (node.matches("img")) linkImageToOriginal(node);
+      makeContentImagesClickable(node);
+    }));
+  });
+  imageObserver.observe(document.querySelector("main") || document.body, { childList: true, subtree: true });
+
+'''
+          if marker not in js:
+              raise SystemExit('JS insertion marker not found')
+          js = js.replace(marker, addition + marker, 1)
+          js_path.write_text(js)
+
+          css_path = Path('assets/todaiji-enhanced.css')
+          css = css_path.read_text()
+          css_addition = r'''
+
+/* Every content image keeps its crop but opens the complete image file on click. */
+.image-original-link{position:relative;display:block;min-width:0;color:inherit;overflow:hidden;cursor:zoom-in}
+.image-original-link>img{display:block;width:100%;height:100%}
+.image-original-link::after{content:"查看原圖 ↗";position:absolute;right:10px;bottom:10px;padding:6px 9px;border-radius:999px;background:rgba(14,43,46,.86);color:#fff;font-size:.7rem;font-weight:700;letter-spacing:.04em;opacity:0;transform:translateY(4px);transition:opacity .18s ease,transform .18s ease;pointer-events:none}
+.image-original-link:hover::after,.image-original-link:focus-visible::after{opacity:1;transform:none}
+.image-original-link:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.lotus-evidence>.image-original-link{background:#111}
+#object-room figure>.image-original-link{height:auto}
+#object-room figure>.image-original-link>img{height:auto;aspect-ratio:3/4;object-fit:cover}
+'''
+          if 'Every content image keeps its crop' in css:
+              raise SystemExit('Clickable-image CSS already present')
+          css_path.write_text(css.rstrip() + css_addition + '\n')
+
+          smoke_path = Path('scripts/smoke_todaiji.cjs')
+          smoke = smoke_path.read_text()
+          smoke_marker = '    const objectCount = await page.locator("#object-room [data-object-material]").count();'
+          smoke_addition = '''    const allImages = await page.locator("main img").count();\n    const linkedImages = await page.locator("main a.image-original-link > img").count();\n    if (allImages === 0) errors.push("Tōdai-ji page contains no content images");\n    if (linkedImages !== allImages) errors.push(`${allImages - linkedImages} content images are not linked to their complete image`);\n    const firstImageLink = page.locator("main a.image-original-link").first();\n    if (await firstImageLink.getAttribute("target") !== "_blank") errors.push("image link does not open separately");\n\n'''
+          if smoke_marker not in smoke:
+              raise SystemExit('Smoke insertion marker not found')
+          smoke = smoke.replace(smoke_marker, smoke_addition + smoke_marker, 1)
+          smoke_path.write_text(smoke)
+
+          sw_path = Path('sw.js')
+          sw = sw_path.read_text()
+          if 'kansai-todaiji-v6' not in sw:
+              raise SystemExit('Service worker cache marker not found')
+          sw = sw.replace('kansai-todaiji-v6', 'kansai-todaiji-v7', 1)
+          sw = sw.replace(old_css_version, new_css_version, 1)
+          sw_path.write_text(sw)
+          PY
+      - name: Syntax and site validation
+        run: |
+          node --check assets/todaiji.js
+          node --check scripts/smoke_todaiji.cjs
+          node --check sw.js
+          python -m pip install --quiet beautifulsoup4
+          python scripts/validate_site.py
+      - name: Commit patch
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add assets/todaiji.js assets/todaiji-enhanced.css scripts/smoke_todaiji.cjs sw.js
+          git commit -m "Make Tōdai-ji content images open full originals"
+          git push origin HEAD:fix/todaiji-clickable-images
