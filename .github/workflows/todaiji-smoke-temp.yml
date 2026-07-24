@@ -1,0 +1,32 @@
+name: Temporary Tōdai-ji browser smoke
+
+on:
+  push:
+    branches:
+      - enhance/todaiji-museum-study
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Playwright and Chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Start local site
+        run: |
+          python -m http.server 8000 >/tmp/todaiji-http.log 2>&1 &
+          sleep 3
+      - name: Run Tōdai-ji browser smoke
+        run: node scripts/smoke_todaiji.cjs
