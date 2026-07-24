@@ -34,9 +34,6 @@ jobs:
   deploy-current-main:
     if: github.event_name == 'pull_request' && github.head_ref == 'deploy/todaiji-materials'
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Check out current main
         uses: actions/checkout@v7
