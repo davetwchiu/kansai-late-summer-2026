@@ -73,6 +73,17 @@ const screenshots = [
     if (await firstImageLink.getAttribute("target") !== "_blank") errors.push("image link does not open separately");
     if (!await firstImageLink.getAttribute("href")) errors.push("image link has no original-image URL");
 
+    const expectedObjectLinks = {
+      "birth-buddha": "online.bunka.go.jp/db/heritages/detail/192443",
+      "half-seated": "online.bunka.go.jp/db/heritages/detail/152018",
+      "shaka-taho": "online.bunka.go.jp/heritages/detail/266902/2",
+      "benten-kichijoten": "online.bunka.go.jp/db/heritages/detail/181542",
+    };
+    for (const [key, expected] of Object.entries(expectedObjectLinks)) {
+      const href = await page.locator(`[data-object-link="${key}"]`).getAttribute("href");
+      if (!href || !href.includes(expected)) errors.push(`${key} does not link to its exact official object page`);
+    }
+
     const objectCount = await page.locator("#object-room [data-object-material]").count();
     if (objectCount !== 8) errors.push(`museum dossier contains ${objectCount} object cards`);
     await page.close();
