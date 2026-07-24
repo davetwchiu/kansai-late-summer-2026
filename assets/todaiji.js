@@ -4,7 +4,7 @@
 
   const enhancedStyle = document.createElement("link");
   enhancedStyle.rel = "stylesheet";
-  enhancedStyle.href = "assets/todaiji-enhanced.css?v=20260724-1";
+  enhancedStyle.href = "assets/todaiji-enhanced.css?v=20260724-2";
   document.head.appendChild(enhancedStyle);
 
   const PUBLIC_LOTUS_IMAGE = "https://upload.wikimedia.org/wikipedia/commons/7/7a/%E5%B0%8F%E5%B7%9D%E6%99%B4%E6%9A%98%E6%92%AE%E5%BD%B1%E3%80%8A%E5%A4%A7%E4%BB%8F%E8%93%AE%E5%BC%81%E7%B7%9A%E5%88%BB%E5%9B%B3%E3%80%8B.jpg";
@@ -261,6 +261,46 @@
     }
     if (fieldActions) fieldActions.remove();
   }
+
+  const originalImageSources = new Map([
+    ["assets/images/todaiji/daibutsuden.webp", "https://commons.wikimedia.org/wiki/Special:Redirect/file/Todaiji_daibutsuden_20070923.jpg"],
+    ["assets/images/todaiji/nandaimon-structure.webp", "https://commons.wikimedia.org/wiki/Special:Redirect/file/Todaiji06s3200.jpg"],
+    ["assets/images/todaiji/nio-ungyo.webp", "https://commons.wikimedia.org/wiki/Special:Redirect/file/Nio_Ungyo_at_Todaiji_Nandaimon.jpg"],
+    ["assets/images/todaiji/daibutsu.webp", "https://commons.wikimedia.org/wiki/Special:Redirect/file/Daibutsu_of_Todaiji_2.jpg"],
+    ["assets/images/todaiji/octagonal-lantern.webp", "https://commons.wikimedia.org/wiki/Special:Redirect/file/Octagonal_Lantern_in_front_of_Daibutsuden_of_Todaiji_Temple.jpg"],
+    ["assets/images/todaiji/hokkedo.webp", "https://commons.wikimedia.org/wiki/Special:Redirect/file/Todaiji_hokkedo.jpg"],
+    ["assets/images/todaiji/nigatsudo.webp", "https://commons.wikimedia.org/wiki/Special:Redirect/file/Nigatsu-dou_Todaiji_JPN1.jpg"],
+    ["assets/images/todaiji/shunie.webp", "https://commons.wikimedia.org/wiki/Special:Redirect/file/Todaiji_Syunie_Nara_JPN_001.JPG"]
+  ]);
+
+  const linkImageToOriginal = (image) => {
+    if (!(image instanceof HTMLImageElement) || image.closest("a")) return;
+    const declaredSource = image.getAttribute("src") || "";
+    const source = originalImageSources.get(declaredSource.replace(/^\.\//, "")) || image.currentSrc || image.src;
+    if (!source) return;
+    const link = document.createElement("a");
+    link.className = "image-original-link";
+    link.href = source;
+    link.target = "_blank";
+    link.rel = "noopener";
+    link.setAttribute("aria-label", `查看完整圖片：${image.alt || "東大寺圖片"}`);
+    link.title = "查看完整圖片";
+    image.parentNode.insertBefore(link, image);
+    link.appendChild(image);
+  };
+
+  const makeContentImagesClickable = (root = document) => {
+    if (root instanceof HTMLImageElement) linkImageToOriginal(root);
+    root.querySelectorAll?.("main img").forEach(linkImageToOriginal);
+  };
+  makeContentImagesClickable();
+  const imageObserver = new MutationObserver((records) => {
+    records.forEach((record) => record.addedNodes.forEach((node) => {
+      if (!(node instanceof Element)) return;
+      makeContentImagesClickable(node);
+    }));
+  });
+  imageObserver.observe(document.querySelector("main") || document.body, { childList: true, subtree: true });
 
   const sources = document.querySelector("#sources .section-heading");
   if (sources) {
