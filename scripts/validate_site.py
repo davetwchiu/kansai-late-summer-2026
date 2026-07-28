@@ -8,7 +8,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = [
     'index.html','daily.html','deep-itinerary.html','culture.html','museums.html','food.html','drinks.html','maps.html',
-    'todaiji.html','assets/style.css','assets/site.js','assets/todaiji.js','sw.js','scripts/smoke_todaiji.cjs','assets/route.svg',
+    'todaiji.html','assets/style.css','assets/site.js','assets/todaiji.js','sw.js','offline-files.json','scripts/smoke_todaiji.cjs','assets/route.svg',
     'assets/images/hero-kansai-editorial.webp','assets/images/culture-layers-editorial.webp',
     'assets/images/dining-technique-editorial.webp','data/itinerary.json','data/todaiji-media.json','AGENTS.md',
     'assets/images/todaiji/daibutsuden.webp','assets/images/todaiji/nandaimon-structure.webp',
@@ -141,6 +141,31 @@ if len(food_soup.select('.service-japanese dt')) < 10:
 site_js=(ROOT/'assets/site.js').read_text(encoding='utf-8')
 if "main > .section, main > .deep-day" not in site_js or "回頁首 ↑" not in site_js:
     errors.append('assets/site.js: missing per-section back-to-top navigation')
+if "serviceWorker" not in site_js or "UPDATE_CONTENT" not in site_js or "更新內容" not in site_js:
+    errors.append('assets/site.js: missing manual offline update control')
+
+try:
+    offline_manifest=json.loads((ROOT/'offline-files.json').read_text(encoding='utf-8'))
+    offline_files={item.removeprefix('./') for item in offline_manifest.get('files',[]) if item != './'}
+    runtime_suffixes={'.html','.css','.js','.json','.png','.webp','.svg','.webmanifest'}
+    runtime_files={
+        path.relative_to(ROOT).as_posix()
+        for path in ROOT.rglob('*')
+        if path.is_file()
+        and '.git' not in path.parts
+        and 'scripts' not in path.parts
+        and path.suffix in runtime_suffixes
+        and path.name not in {'sw.js','offline-files.json'}
+    }
+    for missing in sorted(runtime_files - offline_files):
+        errors.append(f'offline-files.json: missing runtime file {missing}')
+except Exception as exc:
+    errors.append(f'offline-files.json invalid: {exc}')
+
+sw_text=(ROOT/'sw.js').read_text(encoding='utf-8')
+for marker in ('UPDATE_CONTENT','CONTENT_PREFIX','cache: "reload"','ignoreSearch: true'):
+    if marker not in sw_text:
+        errors.append(f'sw.js: missing manual offline update marker {marker}')
 
 daily_soup=BeautifulSoup((ROOT/'daily.html').read_text(encoding='utf-8'),'html.parser')
 context_links=daily_soup.select('.schedule a.context-link')
@@ -179,7 +204,7 @@ for source_page in ('daily.html','deep-itinerary.html','culture.html','museums.h
         errors.append(f'{source_page}: missing cross-link to Tōdai-ji special page')
 
 todaiji_js=(ROOT/'assets/todaiji.js').read_text(encoding='utf-8')
-for marker in ('data-reading-mode', 'data-route-select', 'data-reconstruction', 'serviceWorker'):
+for marker in ('data-reading-mode', 'data-route-select', 'data-reconstruction'):
     if marker not in todaiji_js:
         errors.append(f'assets/todaiji.js: missing interaction marker {marker}')
 try:

@@ -1,63 +1,113 @@
-const CACHE_NAME = "kansai-todaiji-v18";
-const CORE = [
-  "./todaiji.html",
-  "./museums.html",
-  "./assets/style.css?v=20260723-2",
-  "./assets/todaiji-enhanced.css?v=20260724-2",
-  "./assets/todaiji-quick-read.css?v=20260724-1",
-  "./assets/todaiji-deep-stations.css?v=20260724-1",
-  "./assets/todaiji-kaidando-gallery.css?v=20260724-2",
-  "./assets/todaiji-sound-ritual.css?v=20260724-1",
-  "./assets/site.js",
-  "./assets/todaiji.js",
-  "./assets/todaiji-media-audit.js",
-  "./assets/todaiji-quick-read.js?v=20260724-1",
-  "./assets/todaiji-deep-stations.js?v=20260724-1",
-  "./assets/todaiji-kaidando-gallery.js?v=20260724-2",
-  "./assets/todaiji-sound-ritual.js?v=20260724-1",
-  "./assets/images/todaiji/daibutsuden.webp",
-  "./assets/images/todaiji/nandaimon-structure.webp",
-  "./assets/images/todaiji/nio-ungyo.webp",
-  "./assets/images/todaiji/daibutsu.webp",
-  "./assets/images/todaiji/octagonal-lantern.webp",
-  "./assets/images/todaiji/hokkedo.webp",
-  "./assets/images/todaiji/nigatsudo.webp",
-  "./assets/images/todaiji/shunie.webp",
-  "./data/todaiji-media.json",
-  "./daily.html",
-  "./maps.html"
-];
+const META_CACHE = "kansai-offline-meta-v1";
+const CONTENT_PREFIX = "kansai-offline-content-";
+const ACTIVE_KEY = new URL("./__active_content__", self.registration.scope);
+const OFFLINE_MANIFEST = "./offline-files.json";
+
+async function getActiveCacheName() {
+  const response = await (await caches.open(META_CACHE)).match(ACTIVE_KEY);
+  return response ? response.text() : null;
+}
+
+async function setActiveCacheName(name) {
+  const meta = await caches.open(META_CACHE);
+  await meta.put(ACTIVE_KEY, new Response(name));
+}
+
+async function downloadContent() {
+  const manifestResponse = await fetch(OFFLINE_MANIFEST, { cache: "reload" });
+  if (!manifestResponse.ok) throw new Error("無法下載離線檔案清單");
+
+  const manifest = await manifestResponse.json();
+  const nextCacheName = `${CONTENT_PREFIX}${manifest.version}-${Date.now()}`;
+  const nextCache = await caches.open(nextCacheName);
+
+  try {
+    await nextCache.addAll(
+      manifest.files.map((url) => new Request(url, { cache: "reload" }))
+    );
+    const previousCacheName = await getActiveCacheName();
+    await setActiveCacheName(nextCacheName);
+    if (previousCacheName && previousCacheName !== nextCacheName) {
+      await caches.delete(previousCacheName);
+    }
+    return manifest.version;
+  } catch (error) {
+    await caches.delete(nextCacheName);
+    throw error;
+  }
+}
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(CORE)));
-  self.skipWaiting();
+  event.waitUntil(
+    getActiveCacheName().then((name) => name || downloadContent())
+  );
 });
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => Promise.all(keys.filter((key) => key.startsWith("kansai-todaiji-") && key !== CACHE_NAME).map((key) => caches.delete(key))))
+    Promise.all([
+      self.clients.claim(),
+      caches.keys().then(async (names) => {
+        const active = await getActiveCacheName();
+        await Promise.all(
+          names
+            .filter((name) =>
+              (name.startsWith(CONTENT_PREFIX) && name !== active) ||
+              name.startsWith("kansai-todaiji-")
+            )
+            .map((name) => caches.delete(name))
+        );
+      }),
+    ])
   );
-  self.clients.claim();
+});
+
+self.addEventListener("message", (event) => {
+  if (event.data?.type === "SKIP_WAITING") {
+    self.skipWaiting();
+    return;
+  }
+
+  if (event.data?.type !== "UPDATE_CONTENT") return;
+  event.waitUntil(
+    downloadContent()
+      .then((version) => event.ports[0]?.postMessage({ ok: true, version }))
+      .catch((error) =>
+        event.ports[0]?.postMessage({
+          ok: false,
+          message: error.message || "更新失敗",
+        })
+      )
+  );
 });
 
 self.addEventListener("fetch", (event) => {
-  if (event.request.method !== "GET" || new URL(event.request.url).origin !== self.location.origin) return;
-  const networkFirst = event.request.mode === "navigate" || ["style", "script"].includes(event.request.destination);
-  if (networkFirst) {
-    event.respondWith(
-      fetch(event.request).then((response) => {
-        const copy = response.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
-        return response;
-      }).catch(() => caches.match(event.request).then((cached) => cached || caches.match("./todaiji.html")))
-    );
+  if (
+    event.request.method !== "GET" ||
+    new URL(event.request.url).origin !== self.location.origin
+  ) {
     return;
   }
+
   event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request).then((response) => {
-      const copy = response.clone();
-      caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
-      return response;
-    }).catch(() => event.request.mode === "navigate" ? caches.match("./todaiji.html") : Response.error()))
+    getActiveCacheName().then(async (name) => {
+      const cache = name ? await caches.open(name) : null;
+      const cached = cache
+        ? await cache.match(event.request, { ignoreSearch: true })
+        : null;
+      if (cached) return cached;
+
+      try {
+        return await fetch(event.request);
+      } catch (error) {
+        if (event.request.mode === "navigate" && cache) {
+          return (
+            (await cache.match("./index.html")) ||
+            (await cache.match("./"))
+          );
+        }
+        throw error;
+      }
+    })
   );
 });

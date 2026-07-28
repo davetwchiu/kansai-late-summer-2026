@@ -30,6 +30,10 @@ python3 scripts/validate_site.py
 
 The validator checks required files and visual assets, internal and fragment links, cultural and dining structure, map completeness, eight-day JSON data, house-style rules, and likely private booking data.
 
+## Offline use
+
+The site installs a complete local copy on first load. Pages keep using that copy until **更新內容** is pressed; a failed or interrupted update leaves the previous copy intact. External Google Maps links still require a network connection.
+
 ## Privacy
 
 The public site must not contain reservation numbers, confirmation numbers, party-size metadata, guest names, or hotel confirmation details.

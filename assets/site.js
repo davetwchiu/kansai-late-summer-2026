@@ -244,4 +244,112 @@
     container.appendChild(row);
   });
 
+  const setupOfflineControls = async () => {
+    if (!('serviceWorker' in navigator) || !window.location.protocol.startsWith('http')) return;
+
+    const footer = document.querySelector('.footer .footer-grid');
+    const mobileTools = document.querySelector('.mobile-tools');
+    const status = document.createElement('span');
+    status.className = 'offline-status';
+    status.setAttribute('role', 'status');
+    status.setAttribute('aria-live', 'polite');
+    status.textContent = navigator.onLine ? '離線版已備妥' : '現正使用離線版';
+
+    const makeButton = (mobile = false) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = mobile ? 'offline-update mobile-update' : 'offline-update';
+      button.textContent = mobile ? '更新' : '更新內容';
+      button.setAttribute('aria-label', '更新離線內容');
+      return button;
+    };
+
+    const buttons = [];
+    if (footer) {
+      const control = document.createElement('div');
+      control.className = 'offline-control';
+      const button = makeButton();
+      buttons.push(button);
+      control.append(button, status);
+      footer.appendChild(control);
+    }
+    if (mobileTools) {
+      const button = makeButton(true);
+      buttons.push(button);
+      mobileTools.appendChild(button);
+    }
+
+    let registration;
+    try {
+      registration = await navigator.serviceWorker.register('sw.js');
+      await navigator.serviceWorker.ready;
+    } catch (_) {
+      status.textContent = '未能啟用離線版';
+      buttons.forEach((button) => { button.disabled = true; });
+      return;
+    }
+
+    const activateWaitingWorker = async () => {
+      if (!registration.waiting) return;
+      const changed = new Promise((resolve) => {
+        navigator.serviceWorker.addEventListener('controllerchange', resolve, { once: true });
+      });
+      registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+      await changed;
+    };
+
+    const updateContent = async () => {
+      if (!navigator.onLine) {
+        status.textContent = '目前離線，已保留原有內容';
+        return;
+      }
+
+      buttons.forEach((button) => {
+        button.disabled = true;
+        button.textContent = '更新中…';
+      });
+      status.textContent = '正在下載完整新版';
+
+      try {
+        await activateWaitingWorker();
+        const worker = navigator.serviceWorker.controller || registration.active;
+        if (!worker) throw new Error('離線服務尚未就緒');
+
+        const result = await new Promise((resolve, reject) => {
+          const channel = new MessageChannel();
+          const timeout = setTimeout(() => reject(new Error('更新逾時')), 60000);
+          channel.port1.onmessage = ({ data }) => {
+            clearTimeout(timeout);
+            data?.ok ? resolve(data) : reject(new Error(data?.message || '更新失敗'));
+          };
+          worker.postMessage({ type: 'UPDATE_CONTENT' }, [channel.port2]);
+        });
+
+        status.textContent = `已更新至 ${result.version}`;
+        window.location.reload();
+      } catch (_) {
+        status.textContent = '更新失敗，已保留原有內容';
+        buttons.forEach((button) => {
+          button.disabled = false;
+          button.textContent = button.classList.contains('mobile-update') ? '重試' : '重新更新';
+        });
+      }
+    };
+
+    buttons.forEach((button) => button.addEventListener('click', updateContent));
+    window.addEventListener('offline', () => {
+      status.textContent = '現正使用離線版';
+      buttons.forEach((button) => { button.disabled = true; });
+    });
+    window.addEventListener('online', () => {
+      status.textContent = '已連線；按更新內容先下載新版';
+      buttons.forEach((button) => {
+        button.disabled = false;
+        button.textContent = button.classList.contains('mobile-update') ? '更新' : '更新內容';
+      });
+    });
+  };
+
+  setupOfflineControls();
+
 })();

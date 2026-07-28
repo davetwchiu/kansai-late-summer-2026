@@ -292,7 +292,4 @@
   const updated = document.querySelector(".footer .updated");
   if (updated) updated.textContent = "內容與互動重整：2026-07-24";
 
-  if ("serviceWorker" in navigator && window.location.protocol.startsWith("http")) {
-    window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
-  }
 })();
