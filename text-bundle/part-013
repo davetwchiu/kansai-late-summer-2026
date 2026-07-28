@@ -1,0 +1,207 @@
+s": [
+        {
+          "time": "10:00–12:00",
+          "title": "大阪くらしの今昔館"
+        },
+        {
+          "time": "12:00–13:00",
+          "title": "天神橋筋商店街簡單午餐"
+        },
+        {
+          "time": "13:00–14:00",
+          "title": "回酒店休息"
+        },
+        {
+          "time": "14:00",
+          "title": "由酒店出發"
+        },
+        {
+          "time": "14:40–16:10",
+          "title": "四天王寺"
+        },
+        {
+          "time": "16:10–17:30",
+          "title": "口縄坂視天氣短行；前往餐廳"
+        },
+        {
+          "time": "18:00",
+          "title": "鮨まさる"
+        }
+      ],
+      "notes": [
+        "四天王寺必須準時入。",
+        "酷熱或下雨，直接刪口縄坂。",
+        "今昔館翌日起長期休館。"
+      ],
+      "tags": [
+        "大阪",
+        "生活史",
+        "寺院"
+      ]
+    },
+    {
+      "id": "d0901",
+      "date": "1/9",
+      "weekday": "Tue",
+      "title": "箕面：長午餐與山徑",
+      "summary": "野味、瀧安寺、大滝",
+      "items": [
+        {
+          "time": "11:30–14:30",
+          "title": "Osteria Shoru premium course；主菜選野味"
+        },
+        {
+          "time": "14:30–15:00",
+          "title": "往桜井站、轉乘至箕面站"
+        },
+        {
+          "time": "15:00",
+          "title": "沿滝道出發"
+        },
+        {
+          "time": "15:30",
+          "title": "瀧安寺"
+        },
+        {
+          "time": "16:00",
+          "title": "箕面大滝"
+        },
+        {
+          "time": "16:20–17:30",
+          "title": "原路回箕面站"
+        },
+        {
+          "time": "18:00前",
+          "title": "開始回大阪"
+        }
+      ],
+      "notes": [
+        "午餐結束時間優先。",
+        "雷雨、酷熱或迂回路狀況不佳，可在瀧安寺折返。",
+        "不要飲酒後勉強走山路。"
+      ],
+      "tags": [
+        "半日",
+        "長午餐",
+        "山徑"
+      ]
+    },
+    {
+      "id": "d0902",
+      "date": "2/9",
+      "weekday": "Wed",
+      "title": "黑杉與回程",
+      "summary": "壽司後直往機場",
+      "items": [
+        {
+          "time": "上午",
+          "title": "收拾、退房、寄存行李"
+        },
+        {
+          "time": "11:30–13:00",
+          "title": "黒杉"
+        },
+        {
+          "time": "13:00–14:00",
+          "title": "取行李、前往機場"
+        },
+        {
+          "time": "17:35",
+          "title": "CX507"
+        }
+      ],
+      "notes": [
+        "即使午餐吃兩小時仍有 buffer。",
+        "餐後不再安排購物。",
+        "建議14:00前離開大阪站一帶。"
+      ],
+      "tags": [
+        "回程",
+        "壽司"
+      ]
+    }
+  ],
+  "last_verified": "2026-07-20"
+}
+<<<END:data/itinerary.json>>>
+
+<<<FILE:scripts/validate_site.py>>>
+#!/usr/bin/env python3
+from pathlib import Path
+from bs4 import BeautifulSoup
+import json
+import re
+import sys
+
+ROOT = Path(__file__).resolve().parents[1]
+REQUIRED = [
+    'index.html','daily.html','deep-itinerary.html','culture.html','museums.html','food.html','maps.html',
+    'assets/style.css','assets/site.js','assets/route.svg','data/itinerary.json','AGENTS.md'
+]
+PRIVATE_PATTERNS = [
+    re.compile(r'Reservation Number', re.I),
+    re.compile(r'Confirmation\s*#', re.I),
+    re.compile(r'25210885'),
+    re.compile(r'Party size', re.I),
+]
+errors=[]
+
+for rel in REQUIRED:
+    if not (ROOT/rel).exists():
+        errors.append(f'missing required file: {rel}')
+
+html_files=sorted(ROOT.glob('*.html'))
+ids_by_file={}
+for path in html_files:
+    text=path.read_text(encoding='utf-8')
+    soup=BeautifulSoup(text,'html.parser')
+    ids_by_file[path.name]={tag.get('id') for tag in soup.find_all(attrs={'id':True})}
+    if not soup.title or not soup.title.string.strip():
+        errors.append(f'{path.name}: missing title')
+    if not soup.find('meta',attrs={'name':'viewport'}):
+        errors.append(f'{path.name}: missing viewport')
+    if not soup.find('main'):
+        errors.append(f'{path.name}: missing main')
+    nav_labels=[a.get_text(strip=True) for a in soup.select('.nav a')]
+    if len(nav_labels) != 7:
+        errors.append(f'{path.name}: expected 7 nav links, got {len(nav_labels)}')
+    for pattern in PRIVATE_PATTERNS:
+        if pattern.search(text):
+            errors.append(f'{path.name}: possible private data matched {pattern.pattern}')
+
+for path in html_files:
+    soup=BeautifulSoup(path.read_text(encoding='utf-8'),'html.parser')
+    for tag in soup.find_all(['a','link','script','img']):
+        attr='href' if tag.name in ('a','link') else 'src'
+        val=tag.get(attr)
+        if not val or val.startswith(('http://','https://','mailto:','tel:','javascript:')):
+            continue
+        target, _, frag = val.partition('#')
+        target_path=(path.parent/target).resolve() if target else path.resolve()
+        try:
+            target_path.relative_to(ROOT.resolve())
+        except ValueError:
+            errors.append(f'{path.name}: path escapes root: {val}')
+            continue
+        if not target_path.exists():
+            errors.append(f'{path.name}: broken local reference: {val}')
+            continue
+        if frag and target_path.suffix=='.html':
+            ids=ids_by_file.get(target_path.name,set())
+            if frag not in ids:
+                errors.append(f'{path.name}: missing fragment #{frag} in {target_path.name}')
+
+try:
+    data=json.loads((ROOT/'data/itinerary.json').read_text(encoding='utf-8'))
+    if len(data.get('days',[])) != 8:
+        errors.append('data/itinerary.json: expected 8 days')
+except Exception as exc:
+    errors.append(f'data/itinerary.json invalid: {exc}')
+
+if errors:
+    print('VALIDATION FAILED')
+    for error in errors:
+        print(f'- {error}')
+    sys.exit(1)
+print(f'VALIDATION PASSED: {len(html_files)} HTML pages, local links and privacy checks OK')
+<<<END:scripts/validate_site.py>>>

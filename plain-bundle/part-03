@@ -1,0 +1,35 @@
+-bottom:10px}
+.restaurant-list{max-width:1080px;margin:0 auto}.restaurant-long{display:grid;grid-template-columns:180px minmax(0,1fr);gap:42px;padding:56px 0;border-top:1px solid var(--line);scroll-margin-top:105px}.restaurant-long aside{position:sticky;top:110px;align-self:start;color:var(--muted)}.restaurant-long .num{font-family:var(--serif);font-size:3rem;color:var(--gold);line-height:1;margin-bottom:12px}.restaurant-long h2{font-family:var(--serif);font-size:clamp(2rem,4vw,3rem);margin:0 0 .4em}.restaurant-long p{font-size:1.02rem}.restaurant-long .reading{background:#fff8ee;border-left:4px solid var(--vermilion);padding:17px 20px;margin-top:24px}
+.route-note{margin-top:18px;padding:14px 16px;background:#f2f5ef;border-left:3px solid var(--sage);font-size:.9rem}.section.compact{padding:35px 0 0;border:0}
+@media(max-width:900px){.editorial-lead{columns:1}.deep-reading,.museum-detail,.restaurant-long{grid-template-columns:1fr;gap:18px}.deep-reading aside,.museum-side,.restaurant-long aside{position:static}.chapter-head{grid-template-columns:1fr;gap:12px}}
+@media(max-width:760px){.nav.open{grid-template-columns:repeat(2,1fr)}.chapter-head span{font-size:2.2rem}.longform,.deep-reading,.museum-detail,.restaurant-long{padding:40px 0}.museum-body .deck,.restaurant-long .deck{font-size:1.2rem}.editorial-lead p,.longform p{font-size:1rem}}
+<<<END:assets/style.css>>>
+
+<<<FILE:culture.html>>>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>文化筆記｜2026 關西晚夏</title>
+<meta name="description" content="奈良、堺、神戶、大阪與箕面的歷史、制度、技術與地方文化長文。">
+<link rel="stylesheet" href="assets/style.css">
+<script defer src="assets/site.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要內容</a>
+<header class="site-header"><div class="wrap header-row">
+<a class="brand" href="index.html"><span class="brand-mark">旅</span><span class="brand-copy"><strong>關西晚夏旅程誌</strong><span>Osaka base · 26 Aug–2 Sep 2026</span></span></a>
+<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">選單</button>
+<nav id="primary-nav" class="nav" aria-label="主要導覽"><a  href="index.html">首頁</a><a  href="daily.html">每日行程</a><a  href="deep-itinerary.html">深度行程</a><a aria-current="page" href="culture.html">文化筆記</a><a  href="museums.html">入館筆記</a><a  href="food.html">餐飲</a><a  href="maps.html">地圖</a></nav>
+</div></header><section class="page-hero"><div class="wrap"><div class="eyebrow">Culture notes</div><h1>文化筆記</h1><p>景點只有在放回制度、材料、勞動與城市史後，才會由名字變成地方。</p></div></section>
+<main id="main"><section class="section"><div class="wrap"><section class="essay wide"><div class="kicker">Reading frame</div><h2>這趟不是「關西古蹟與美食」，而是五種地方技術的比較。</h2><p>奈良保存神聖圖像；堺把貿易轉成茶湯和金屬工業；神戶把木工知識、酒造規模和港口商業疊在一起；大阪把住居、商業和古代佛教壓進同一城市；箕面則展示大都市如何長期使用近郊山水。以下筆記不是通史，而是專為本次動線挑選的閱讀角度。</p><nav class="quick-nav"><a href="#nara">奈良</a><a href="#sakai">堺</a><a href="#kobe">神戶</a><a href="#nada">灘酒</a><a href="#osaka">大阪</a><a href="#minoh">箕面</a></nav></section>
+<section class="longform" id="nara"><div class="chapter-head"><div><span>01</span><div>Nara / sacred images</div></div><h2>奈良：佛畫不是掛在牆上的宗教美術，而是寺院記憶的操作系統。</h2></div>
+<p>奈良的難處，在於它太早成為「日本古都」的代表。大佛、鹿、古寺和正倉院的名聲，容易令每件作品都被一層「一千三百年」的光暈包住，最後只剩古老與莊嚴。這次由奈良國立博物館的「南都仏画」入手，反而可拆開這層光暈：甚麼叫南都？佛畫為何需要一再複製、修補、重畫和再構成？一幅圖像離開原寺院、進入海外收藏，再回奈良展出時，它的宗教功能和美術價值如何改變？</p>
+<h3>南都不是單一畫派，而是大寺院形成的圖像共同體</h3><p>「南都」原本相對於後來的平安京，指奈良舊都及其大寺院。東大寺、興福寺、法隆寺、西大寺等寺院各有宗派、儀式、僧團和寶物流傳，但它們也共享天平文化的權威。南都佛畫因此不是由同一師門畫出來的整齊風格，而是一套不斷回望奈良時代典範的視覺記憶：後世畫師會依舊像、粉本、寺傳和儀軌重構理想中的天平美。</p><p>這使「複製」成為核心，而非次等行為。宗教圖像並不以現代藝術的原創性為最高價值；重要的是圖像能否準確承載尊格、儀式和功德。舊畫損壞後重畫，不只是修復物件，而是令信仰秩序繼續運作。到展覽中看作品時，應多問一層：眼前這幅畫是在保存哪一個更早的圖像？它的線條、色彩、尊像配置和題記，怎樣說明寺院想把甚麼記憶延續下去？</p>
+<h3>由博物館走回東大寺：藝術品重新變成空間中的力量</h3><p>上午在博物館，作品被燈光、牆面、標籤和年代分類管理；下午進東大寺，觀看條件完全不同。南大門的金剛力士不是雕塑史例證，而是在門口以巨大身體守護境界；大佛不只是一尊青銅像，而是國家動員金屬、木材、工匠、僧侶和地方資源的政治—宗教工程；法華堂的造像群則以密集、近距離和昏暗空間形成壓迫力。</p><p>東大寺經歷火災、戰亂與多次重建，現存大佛殿也不是奈良時代原貌。這不削弱它，反而揭示寺院的真正本質：它不是一次完成的古代遺物，而是反覆籌款、重鑄、重建、供養的長期制度。把「真跡崇拜」放低，便能看見維持一座巨大寺院需要甚麼社會能力。</p>
+<h3>依水園：由國家尺度退回私人觀看</h3><p>下午最後去依水園，不是為了再加一個「日式庭園」，而是有意改變尺度。東大寺以巨構、軸線和宗教權威支配身體；依水園則用水面、飛石、茶室、借景和步移景異，把觀看變成私人節奏。後園借若草山、春日山和東大寺南大門一帶作遠景，正好令剛才經過的巨大宗教地景退到庭園框景之中。</p><div class="reading-box"><strong>到場讀法：</strong>在博物館追圖像的來源與傳承；在東大寺看圖像如何控制空間；在依水園看宏大歷史如何被私人庭園重新取景。三站不是「美術館—寺—花園」，而是三種觀看制度。</div><p class="source-links"><strong>官方資料：</strong><a href="https://www.narahaku.go.jp/exhibition/special/special_exhibition/202607_nantobutsuga/">南都仏画</a><a href="https://www.narahaku.go.jp/?MD=2&SY=0">佛像館</a><a href="https://www.todaiji.or.jp/information/haikan/">東大寺拝觀</a><a href="https://isuien.or.jp/">依水園</a></p></section>
+
+<section class="longform" id="sakai"><div class="chapter-head"><div><span>02</span><div>Sakai / merchant city</div></div><h2>堺：茶湯的「少」與鉄炮的「多」，都建立在商業城市的過剩能力上。</h2></div>
+<p>堺最容易被切成三個觀光標籤：千利休、包丁、古墳。這樣看，每項都成立，卻看不出城市本身。中世堺是瀨戶內海與海外貿易的港口，商人擁有資本、情報、貨物流通和政治協商能力。茶湯、鉄炮與刃物之所以在此成熟，不是偶然出現三種「傳統文化」，而是同一座都市把海外物資、職人、訂單、信用和消費者聚在一起的結果。</p>
+<h3>千利休：侘茶不是貧窮美學，而是富裕者的自我約束</h3>

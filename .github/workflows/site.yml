@@ -1,46 +1,75 @@
-name: Validate and deploy site
+name: Materialize, validate and publish deep-content site
 
 on:
   pull_request:
     branches: [main]
-  push:
-    branches: [main]
-  workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
 concurrency:
-  group: pages-${{ github.ref }}
+  group: deep-content-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  validate:
+  materialize:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
+      - name: Check out pull-request branch
         uses: actions/checkout@v7
-      - name: Set up Python
-        uses: actions/setup-python@v6
         with:
-          python-version: '3.13'
-      - name: Install validator dependency
-        run: python -m pip install --disable-pip-version-check beautifulsoup4
-      - name: Validate pages, links, data and privacy
-        run: python scripts/validate_site.py
+          ref: ${{ github.head_ref }}
+          persist-credentials: true
 
-  deploy:
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-    needs: validate
+      - name: Decode and test deep-content bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s site-content.tar.gz.b64
+          base64 --decode site-content.tar.gz.b64 > /tmp/site-content.tar.gz
+          gzip --test /tmp/site-content.tar.gz
+          rm -rf /tmp/site-content
+          mkdir -p /tmp/site-content
+          tar -xzf /tmp/site-content.tar.gz -C /tmp/site-content
+          test -f /tmp/site-content/deep-itinerary.html
+          test -f /tmp/site-content/scripts/validate_site.py
+
+      - name: Replace branch with exact validated site tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -a /tmp/site-content/. .
+
+      - name: Validate pages, links, data and privacy
+        shell: bash
+        run: |
+          python -m pip install --disable-pip-version-check beautifulsoup4
+          python scripts/validate_site.py
+
+      - name: Commit materialized site to pull-request branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "content: deepen itinerary, culture, museum and dining guides"
+          git push origin HEAD:${{ github.head_ref }}
+
+  publish-preview:
+    needs: materialize
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Check out repository
+      - name: Check out materialized branch
         uses: actions/checkout@v7
+        with:
+          ref: ${{ github.head_ref }}
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v6
       - name: Upload static site
