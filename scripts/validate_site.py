@@ -31,7 +31,7 @@ MAP_REQUIRED_LABELS = [
     '大道筋（旧紀州街道）', '宿院停留場', '弥助',
     '堺伝匠館／堺刃物ミュージアム CUT', '妙国寺前停留場',
     '鉄炮鍛冶屋敷', '高須神社停留場', '七道駅',
-    'しまなみふれんち Murakami', 'ritmicita', '炭火いわ田',
+    'しまなみふれんち Murakami', 'ぽんしゅや 三徳六味 福島本店', 'ritmicita', '炭火いわ田',
     'JR大阪駅', '新神戸駅', '竹中大工道具館', 'トンカツとワイン 日月',
     '阪神神戸三宮駅', '阪神魚崎駅', '菊正宗酒造記念館',
     '白鶴酒造資料館', '神戸酒心館', '阪神石屋川駅',
@@ -179,7 +179,7 @@ required_item_targets={
     'museums.html#fukuju', 'museums.html#konjaku', 'museums.html#shitennoji',
     'culture.html#sakai', 'culture.html#osaka', 'culture.html#minoh',
     'food.html#junjino', 'food.html#unagiku', 'food.html#joji', 'food.html#yasuke',
-    'food.html#murakami', 'food.html#ritmicita', 'food.html#iwata',
+    'food.html#murakami', 'food.html#santoku', 'food.html#ritmicita', 'food.html#iwata',
     'food.html#nichigetsu', 'food.html#espice', 'food.html#masaru',
     'food.html#alcentro',
     'food.html#shoru', 'food.html#sakamoto', 'food.html#kurosugi',
@@ -283,7 +283,7 @@ for phrase in (
     'ウイスキー専門店 相葉星期一休息，已排除',
     '十三トリス北新地', 'BAR RENÉE', 'Cellar Infini', 'Bar K',
     '十三トリスバー 本店',
-    'BAR FORT HORSE', 'スタンド緑橋', 'バー ネムリ',
+    'BAR FORT HORSE', 'スタンド緑橋',
     'ダイアモンドダスト', '北新地サンボア', 'BAR AUGUSTA LUX',
 ):
     if phrase not in drinks_text:
@@ -292,10 +292,15 @@ drinks_soup=BeautifulSoup(drinks_text,'html.parser')
 for night_id in ('d0826-drinks','d0827-drinks','d0828-drinks','d0829-drinks','d0830-drinks','d0831-drinks','d0901-drinks'):
     night=drinks_soup.find(id=night_id)
     option_count=len(night.select('.drink-option')) if night else 0
-    if not 2 <= option_count <= 4:
-        errors.append(f'drinks.html: {night_id} expected 2-4 options, got {option_count}')
+    minimum = 1 if night_id == 'd0828-drinks' else 2
+    if not minimum <= option_count <= 4:
+        errors.append(f'drinks.html: {night_id} expected {minimum}-4 options, got {option_count}')
+if 'ぽんしゅや 三徳六味 福島本店' not in drinks_text:
+    errors.append('drinks.html: missing confirmed 28/8 Fukushima booking')
+if 'ぽんしゅや 三徳六味 福島本店' not in (ROOT/'food.html').read_text(encoding='utf-8'):
+    errors.append('food.html: missing confirmed 28/8 second stop')
 if len(daily_soup.select('a[href^="drinks.html#d08"], a[href="drinks.html#d0901-drinks"]')) < 7:
-    errors.append('daily.html: expected optional post-dinner links for seven dinner evenings')
+    errors.append('daily.html: expected dinner-transition links for seven dinner evenings')
 if 'id="post-dinner"' not in (ROOT/'maps.html').read_text(encoding='utf-8'):
     errors.append('maps.html: missing optional post-dinner venue map section')
 
@@ -314,10 +319,10 @@ if maps_path.exists():
     backup_routes=maps_soup.select('.map-actions a[href*="google.com/maps/dir"]')
     if len(cards) != 8:
         errors.append(f'maps.html: expected 8 day cards, got {len(cards)}')
-    if len(point_links) != 58:
-        errors.append(f'maps.html: expected 58 individual map links, got {len(point_links)}')
-    if len(backup_routes) != 11:
-        errors.append(f'maps.html: expected 11 backup route links, got {len(backup_routes)}')
+    if len(point_links) != 59:
+        errors.append(f'maps.html: expected 59 individual map links, got {len(point_links)}')
+    if len(backup_routes) != 12:
+        errors.append(f'maps.html: expected 12 backup route links, got {len(backup_routes)}')
     map_labels={a.get_text(' ',strip=True).replace('↗','').strip() for a in point_links}
     for label in MAP_REQUIRED_LABELS:
         if label not in map_labels:
