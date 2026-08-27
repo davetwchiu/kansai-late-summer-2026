@@ -170,6 +170,83 @@
     }
   }
 
+  const sakaiDay = document.querySelector('#d0828');
+  if (sakaiDay) {
+    const tbody = sakaiDay.querySelector('table.schedule tbody');
+    if (tbody) {
+      tbody.innerHTML = `
+        <tr><td>10:30</td><td>大阪出發</td></tr>
+        <tr><td>11:30–12:15</td><td><a class="context-link museum-link" href="museums.html#risho">さかい利晶の杜</a>：45分鐘，以千利休與堺背景為主</td></tr>
+        <tr><td>12:15–12:25</td><td><a class="context-link map-link" href="maps.html#d0828">直接步行前往弥助</a>；不另排大道筋或千利休屋敷跡</td></tr>
+        <tr><td>12:30–13:30</td><td><a class="context-link food-link" href="food.html#yasuke">弥助</a></td></tr>
+        <tr><td>13:50–14:45</td><td><a class="context-link museum-link" href="museums.html#cut">堺伝匠館／堺刃物ミュージアム CUT</a></td></tr>
+        <tr><td>15:05–16:00</td><td><a class="context-link museum-link" href="museums.html#teppo">鉄炮鍛冶屋敷</a></td></tr>
+        <tr><td>16:00</td><td>由七道／高須神社離開</td></tr>
+        <tr><td>18:30</td><td><a class="context-link food-link" href="food.html#murakami">しまなみふれんち Murakami</a></td></tr>
+        <tr><td>22:30–00:00</td><td><a class="context-link food-link drink-link confirmed-link" href="food.html#santoku">ぽんしゅや 三徳六味 福島本店：日本酒二次會（予約済）</a></td></tr>`;
+    }
+
+    const priorities = sakaiDay.querySelector('.day-aside ul');
+    if (priorities) {
+      priorities.innerHTML = `
+        <li>10:30才由大阪出發；11:30入利晶之杜。</li>
+        <li>利晶之杜只預45分鐘，以千利休與堺商人文化為主；與謝野晶子按興趣略看。</li>
+        <li>12:15離館直接步行去弥助；不另排大道筋或千利休屋敷跡。</li>
+        <li>酷熱時，堺伝匠館至鍛冶屋敷改搭阪堺線；買刀不能影響15:05入館。</li>
+        <li>Murakami 後留約90分鐘緩衝；22:30再到福島三徳六味。</li>`;
+    }
+  }
+
+  const sakaiDeep = document.querySelector('#sakai');
+  if (sakaiDeep) {
+    const coreParagraph = Array.from(sakaiDeep.querySelectorAll('p')).find((paragraph) => {
+      const strong = paragraph.querySelector('strong');
+      return strong && strong.textContent.includes('今日核心');
+    });
+    if (coreParagraph) {
+      coreParagraph.innerHTML = '<strong>今日核心：</strong>10:30由大阪出發，11:30入利晶之杜，只用45分鐘集中看千利休與堺商人茶湯的關係；與謝野晶子展示按興趣略看。12:15離館後直接步行到弥助，取消大道筋及千利休屋敷跡的獨立散步。午後再一路向北到堺伝匠館與鉄炮鍛冶屋敷；18:30 Murakami，22:30福島三徳六味均維持。';
+    }
+
+    const decisionGrid = sakaiDeep.querySelector('.decision-grid');
+    if (decisionGrid) {
+      decisionGrid.innerHTML = `
+        <div><strong>必留</strong><span>12:30弥助、堺伝匠館、鉄炮鍛冶屋敷、18:30 Murakami、22:30三徳六味</span></div>
+        <div><strong>可縮</strong><span>利晶之杜固定45分鐘；與謝野晶子展示只作快速補充</span></div>
+        <div><strong>硬時間</strong><span>10:30大阪出發；11:30–12:15利晶；12:30入席；15:05鍛冶屋敷；22:30福島預約</span></div>`;
+    }
+  }
+
+  const sakaiVisit = document.querySelector('#sakai-visit');
+  if (sakaiVisit) {
+    const risho = sakaiVisit.querySelector('#risho');
+    if (risho) {
+      const meta = risho.querySelector('.museum-head .meta');
+      if (meta) meta.textContent = '11:30–12:15 · 45分鐘快看，以千利休為主';
+
+      const grid = risho.querySelector('.decision-grid');
+      if (grid) {
+        grid.innerHTML = '<div><strong>45分鐘分配</strong><span>利休與堺城市背景25分鐘；茶室、陶瓷與VR約10分鐘；與謝野晶子／企劃展合計5–7分鐘；離館3–5分鐘</span></div><div><strong>離開</strong><span>12:15準時離館，直接步行約5分鐘往弥助；不另排大道筋或千利休屋敷跡。</span></div><div><strong>相關頁面</strong><span><a href="daily.html#d0828">28/8行程</a> · <a href="culture.html#sakai">堺文化線</a> · <a href="maps.html#d0828">當日地圖</a></span></div>';
+      }
+    }
+  }
+
+  const sakaiMap = document.querySelector('.map-card#d0828');
+  if (sakaiMap) {
+    const meta = sakaiMap.querySelector('.meta');
+    if (meta) meta.textContent = '11:30利晶之杜 → 12:30弥助；午後一路向北';
+
+    sakaiMap.querySelectorAll('.route-steps li').forEach((item) => {
+      if (item.textContent.includes('千利休屋敷跡') || item.textContent.includes('大道筋')) {
+        item.remove();
+      }
+    });
+  }
+
+  if (sakaiDay || sakaiDeep || sakaiVisit || sakaiMap) {
+    const updated = document.querySelector('.footer .updated');
+    if (updated) updated.textContent = '行程同步：2026-08-27';
+  }
+
   const todaijiPage = document.querySelector('.todaiji-page');
   if (todaijiPage) {
     const statusHeading = todaijiPage.querySelector('#visit-status .section-heading');
