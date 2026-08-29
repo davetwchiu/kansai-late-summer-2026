@@ -247,6 +247,67 @@
     if (updated) updated.textContent = '行程同步：2026-08-27';
   }
 
+  const kobeDay = document.querySelector('#d0830');
+  if (kobeDay) {
+    const tbody = kobeDay.querySelector('table.schedule tbody');
+    if (tbody) {
+      const rows = Array.from(tbody.querySelectorAll('tr'));
+      if (rows[0]) rows[0].querySelector('td').textContent = '10:00–11:00';
+      if (rows[1]) rows[1].querySelector('td').textContent = '11:00–12:00';
+      if (rows[2]) {
+        rows[2].querySelector('td').textContent = '12:00–12:25';
+        const detail = rows[2].querySelectorAll('td')[1];
+        if (detail) detail.innerHTML = '<a class="context-link map-link" href="maps.html#d0830">步行前往日月</a>：實走約20–25分鐘，12:25前到店，留約5分鐘報到';
+      }
+    }
+    const priorities = kobeDay.querySelector('.day-aside ul');
+    if (priorities) {
+      const items = Array.from(priorities.querySelectorAll('li'));
+      const oldTakenaka = items.find((item) => item.textContent.includes('竹中'));
+      if (oldTakenaka) oldTakenaka.textContent = '竹中約60分鐘，只看常設展重點；12:00直接步行往日月。';
+    }
+  }
+
+  const kobeDeep = document.querySelector('#kobe');
+  if (kobeDeep) {
+    const coreParagraph = Array.from(kobeDeep.querySelectorAll('p')).find((paragraph) => {
+      const strong = paragraph.querySelector('strong');
+      return strong && strong.textContent.includes('今日核心');
+    });
+    if (coreParagraph) {
+      coreParagraph.innerHTML = '<strong>今日核心：</strong>10:00由酒店出發，竹中大工道具館11:00入館；集中看約60分鐘常設展後，12:00直接步行往中山手通午餐。下午由魚崎起步，沿海岸由東向西走菊正宗、白鶴、福寿，移動上不再折返；17:30由石屋川返回三宮晚餐。';
+    }
+
+    const rhythmParagraph = Array.from(kobeDeep.querySelectorAll('p')).find((paragraph) => {
+      const strong = paragraph.querySelector('strong');
+      return strong && strong.textContent.includes('節奏');
+    });
+    if (rhythmParagraph) {
+      rhythmParagraph.innerHTML = '<strong>節奏：</strong>日月12:30是整天樞紐。12:00由竹中步行出發，實際路程約20–25分鐘，目標12:25前到店，留約5分鐘報到。福寿見學16:30–17:30是另一個硬節點；16:25前要到東明蔵報到。結束後只有55分鐘到エスピス，必須直接步行往石屋川乘阪神線，18:30準時入席。';
+    }
+
+    const decisionGrid = kobeDeep.querySelector('.decision-grid');
+    if (decisionGrid) {
+      decisionGrid.innerHTML = `
+        <div><strong>必留</strong><span>竹中、菊正宗、白鶴、18:30晚餐</span></div>
+        <div><strong>已預約</strong><span>福寿16:30日語有料蔵見學；16:25前報到</span></div>
+        <div><strong>硬時間</strong><span>10:00出發；12:30午餐；17:30離酒心館；18:30晚餐</span></div>`;
+    }
+  }
+
+  const kobeMap = document.querySelector('.map-card#d0830');
+  if (kobeMap) {
+    const meta = kobeMap.querySelector('.meta');
+    if (meta) meta.textContent = '10:00大阪出發；灘五鄉由東向西';
+    const routeButton = kobeMap.querySelector('.map-actions a[href*="destination=竹中大工道具館"]');
+    if (routeButton) routeButton.textContent = '10:00 酒店 → 竹中';
+  }
+
+  if (kobeDay || kobeDeep || kobeMap) {
+    const updated = document.querySelector('.footer .updated');
+    if (updated) updated.textContent = '行程同步：2026-08-30';
+  }
+
   const todaijiPage = document.querySelector('.todaiji-page');
   if (todaijiPage) {
     const statusHeading = todaijiPage.querySelector('#visit-status .section-heading');
