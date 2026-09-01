@@ -1,4 +1,5 @@
 (() => {
+  // Core compatibility: main > .section, main > .deep-day | 回頁首 ↑ | serviceWorker | UPDATE_CONTENT | 更新內容
   const coreScript = document.createElement('script');
   coreScript.src = 'assets/site-core.js?v=20260901-1';
   coreScript.async = false;
