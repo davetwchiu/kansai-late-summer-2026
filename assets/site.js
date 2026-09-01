@@ -1,493 +1,66 @@
 (() => {
-  const toggle = document.querySelector('.nav-toggle');
-  const nav = document.querySelector('.nav');
-  if (toggle && nav) {
-    toggle.addEventListener('click', () => {
-      const open = nav.classList.toggle('open');
-      toggle.setAttribute('aria-expanded', String(open));
-    });
-  }
+  const coreScript = document.createElement('script');
+  coreScript.src = 'assets/site-core.js?v=20260901-1';
+  coreScript.async = false;
+  document.head.appendChild(coreScript);
 
-  document.querySelectorAll('[data-copy]').forEach((button) => {
-    button.addEventListener('click', async () => {
-      const text = button.getAttribute('data-copy');
-      try {
-        await navigator.clipboard.writeText(text);
-        const original = button.textContent;
-        button.textContent = '已複製';
-        setTimeout(() => { button.textContent = original; }, 1200);
-      } catch (_) {
-        window.prompt('請複製以下地址：', text);
+  const setupMobileBackButton = () => {
+    if (document.querySelector('.mobile-back-button')) return;
+
+    const style = document.createElement('style');
+    style.textContent = `
+      .mobile-back-button{display:none}
+      @media(max-width:760px){
+        .mobile-back-button{
+          appearance:none;
+          display:grid;
+          place-items:center;
+          position:fixed;
+          left:16px;
+          bottom:calc(68px + env(safe-area-inset-bottom, 0px));
+          z-index:55;
+          width:48px;
+          height:48px;
+          padding:0;
+          border:1px solid rgba(255,255,255,.42);
+          border-radius:50%;
+          background:rgba(24,55,70,.94);
+          color:#fff;
+          box-shadow:0 10px 28px rgba(24,55,70,.28);
+          backdrop-filter:blur(10px);
+          -webkit-backdrop-filter:blur(10px);
+          font:700 1.45rem/1 var(--sans, -apple-system, BlinkMacSystemFont, sans-serif);
+          cursor:pointer;
+          -webkit-tap-highlight-color:transparent;
+        }
+        .mobile-back-button:active{transform:translateY(1px);background:rgba(163,69,49,.96)}
+        .mobile-back-button:focus-visible{outline:3px solid rgba(231,200,140,.88);outline-offset:3px}
+        .mobile-tools{bottom:calc(12px + env(safe-area-inset-bottom, 0px))}
+        .footer{padding-bottom:calc(82px + env(safe-area-inset-bottom, 0px))}
+      }
+      @media print{.mobile-back-button{display:none!important}}
+    `;
+    document.head.appendChild(style);
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'mobile-back-button';
+    button.setAttribute('aria-label', '返回上一頁');
+    button.setAttribute('title', '返回上一頁');
+    button.textContent = '←';
+    button.addEventListener('click', () => {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.assign('index.html');
       }
     });
-  });
-
-  const naraDay = document.querySelector('#d0827');
-  if (naraDay) {
-    const summary = naraDay.querySelector('.summary');
-    if (summary) summary.textContent = '佛畫之後，按人流選東大寺或庭園';
-
-    const tbody = naraDay.querySelector('table.schedule tbody');
-    if (tbody) {
-      tbody.innerHTML = `
-        <tr><td>08:00</td><td>由大阪出發</td></tr>
-        <tr><td>09:30–12:10</td><td><a class="context-link museum-link" href="museums.html#nara-museum">奈良國立博物館：南都仏画、佛像館、青銅器館</a></td></tr>
-        <tr><td>12:10–12:30</td><td><a class="context-link map-link" href="maps.html#d0827">步行前往うな菊</a></td></tr>
-        <tr><td>12:30–13:40</td><td><a class="context-link food-link" href="food.html#unagiku">うな菊 奈良本店</a></td></tr>
-        <tr><td>13:40–14:00</td><td><a class="context-link map-link" href="maps.html#d0827">步行前往東大寺／依水園決策點</a></td></tr>
-        <tr><td>14:00</td><td><strong>現場分流：</strong>先看東大寺人流；可接受則走東大寺線，明顯擠迫則轉依水園線。</td></tr>
-        <tr><td>A｜14:00–16:15</td><td><a class="context-link museum-link" href="todaiji.html#routes">東大寺ミュージアム → 南大門・大佛殿 → 法華堂 → 二月堂</a></td></tr>
-        <tr><td>B｜14:10–15:20</td><td><a class="context-link museum-link" href="museums.html#isuien">依水園／寧樂美術館</a>；其後只看東大寺外圍或直接回站</td></tr>
-        <tr><td>17:00</td><td>近鐵奈良出發</td></tr>
-        <tr><td>19:00</td><td><a class="context-link food-link" href="food.html#joji">旨い料理・旨い酒 じょうじ</a></td></tr>
-        <tr><td>餐後可選</td><td><a class="context-link drink-link" href="drinks.html#d0827-drinks">緑橋小店／熟悉 bar</a></td></tr>`;
-    }
-
-    const priorities = naraDay.querySelector('.day-aside ul');
-    if (priorities) {
-      priorities.innerHTML = `
-        <li>核心：奈良國博、下午其中一條主線、19:00晚餐。</li>
-        <li>14:00按東大寺人流決定；毋須硬塞兩條線。</li>
-        <li>選東大寺後預留約2小時15至30分；17:00離開奈良。</li>`;
-    }
-  }
-
-  const naraDeep = document.querySelector('#nara');
-  if (naraDeep) {
-    const coreParagraph = Array.from(naraDeep.querySelectorAll('p')).find((paragraph) => {
-      const strong = paragraph.querySelector('strong');
-      return strong && strong.textContent.includes('今日核心');
-    });
-    if (coreParagraph) {
-      coreParagraph.innerHTML = '<strong>今日核心：</strong>奈良國立博物館先建立圖像與造像的觀看框架；午餐後約14:00按東大寺人流二選一。東大寺線把作品放回寺院、儀式與伽藍，依水園線則以庭園和收藏收束下午。19:00じょうじ是回大阪後的硬節點。';
-    }
-
-    const gardenParagraph = Array.from(naraDeep.querySelectorAll('p')).find((paragraph) => {
-      const strong = paragraph.querySelector('strong');
-      return strong && strong.textContent.includes('依水園');
-    });
-    if (gardenParagraph) {
-      gardenParagraph.innerHTML = '<strong>14:00現場分流：</strong>午餐後先到東大寺周邊看人流。若人流可接受，保留東大寺ミュージアム、南大門、大佛殿、法華堂與二月堂；若團客明顯擠迫，立即轉往依水園／寧樂美術館。當日只選體驗較好的一條。';
-    }
-
-    const decisionGrid = naraDeep.querySelector('.decision-grid');
-    if (decisionGrid) {
-      decisionGrid.innerHTML = `
-        <div><strong>必留</strong><span>奈良國博、下午其中一條主線、19:00晚餐</span></div>
-        <div><strong>現場決策</strong><span>14:00看東大寺人流；擠迫即轉依水園</span></div>
-        <div><strong>硬時間</strong><span>12:10離開國博；17:00離開奈良</span></div>`;
-    }
-  }
-
-  const unagiku = document.querySelector('#unagiku');
-  if (unagiku) {
-    const timingParagraph = Array.from(unagiku.querySelectorAll('p')).find((paragraph) =>
-      paragraph.textContent.includes('出餐需約20至30分鐘')
-    );
-    if (timingParagraph) {
-      timingParagraph.textContent = '店方說明預約後仍會在到店才開始調理，出餐需約20至30分鐘，座位為90分鐘制。90分鐘是席位上限；行程按一般鰻重節奏預留70分鐘，目標13:40左右離席。若出餐較慢，下午直接按人流選東大寺或依水園，毋須為趕兩邊而倉促用餐。';
-    }
-  }
-
-  const naraMap = document.querySelector('.map-card#d0827');
-  if (naraMap) {
-    const meta = naraMap.querySelector('.meta');
-    if (meta) meta.textContent = '14:00按人流：東大寺／依水園二選一';
-
-    const actions = naraMap.querySelector('.map-actions');
-    if (actions) {
-      const oldRoute = actions.querySelector('a[href*="google.com/maps/dir"]');
-      if (oldRoute) oldRoute.remove();
-
-      const eastRoute = document.createElement('a');
-      eastRoute.className = 'button secondary';
-      eastRoute.href = 'https://www.google.com/maps/dir/?api=1&origin=奈良国立博物館&destination=近鉄奈良駅&waypoints=うな菊+奈良本店|東大寺ミュージアム|東大寺&travelmode=walking';
-      eastRoute.target = '_blank';
-      eastRoute.rel = 'noopener';
-      eastRoute.textContent = '東大寺線（備用）';
-
-      const gardenRoute = document.createElement('a');
-      gardenRoute.className = 'button secondary';
-      gardenRoute.href = 'https://www.google.com/maps/dir/?api=1&origin=奈良国立博物館&destination=近鉄奈良駅&waypoints=うな菊+奈良本店|依水園&travelmode=walking';
-      gardenRoute.target = '_blank';
-      gardenRoute.rel = 'noopener';
-      gardenRoute.textContent = '依水園線（備用）';
-
-      actions.prepend(gardenRoute);
-      actions.prepend(eastRoute);
-    }
-  }
-
-  const naraVisit = document.querySelector('#nara-visit');
-  if (naraVisit) {
-    const heading = naraVisit.querySelector('.section-heading');
-    if (heading) {
-      const title = heading.querySelector('h2');
-      const intro = heading.querySelector('p');
-      if (title) title.textContent = '上午建立觀看框架；下午按人流二選一';
-      if (intro) intro.textContent = '奈良國立博物館是固定核心。午餐後約14:00先看東大寺人流：可接受便走東大寺線；團客明顯擠迫便轉依水園／寧樂美術館。兩條線各自完整，當日不需要兩邊走完。';
-
-      if (!heading.parentElement.querySelector('.nara-choice-note')) {
-        const note = document.createElement('div');
-        note.className = 'notice sage nara-choice-note';
-        note.innerHTML = '<strong>14:00現場決策：</strong>A線為東大寺ミュージアム與寺院本體；B線為依水園／寧樂美術館。選定一線後，不再趕往另一線。';
-        heading.insertAdjacentElement('afterend', note);
-      }
-    }
-
-    const naraMuseum = naraVisit.querySelector('#nara-museum');
-    if (naraMuseum) {
-      const meta = naraMuseum.querySelector('.museum-head .meta');
-      if (meta) meta.textContent = '09:30–12:10 · 固定核心';
-      const grid = naraMuseum.querySelector('.decision-grid');
-      if (grid) {
-        grid.innerHTML = '<div><strong>時間分配</strong><span>南都仏画約100分鐘；佛像館約45分鐘；青銅器館約15分鐘</span></div><div><strong>硬離館</strong><span>12:10離館；12:30準時到うな菊</span></div><div><strong>延伸</strong><span><a href="daily.html#d0827">27/8行程</a> · <a href="culture.html#nara">奈良文化線</a> · <a href="deep-itinerary.html#nara">當日取捨</a></span></div>';
-      }
-    }
-
-    const todaiji = naraVisit.querySelector('#todaiji');
-    if (todaiji) {
-      const meta = todaiji.querySelector('.museum-head .meta');
-      if (meta) meta.textContent = 'A線｜14:00–16:15 · 東大寺人流可接受時';
-      const grid = todaiji.querySelector('.decision-grid');
-      if (grid) {
-        grid.innerHTML = '<div><strong>選擇條件</strong><span>14:00到場時人流仍可接受，便完整走東大寺線</span></div><div><strong>路線</strong><span>ミュージアム → 南大門 → 大佛殿 → 法華堂 → 二月堂</span></div><div><strong>離開</strong><span>約16:15開始回近鐵奈良站；不再轉去依水園</span></div>';
-      }
-      const notice = todaiji.querySelector('.notice.sage');
-      if (notice) {
-        notice.innerHTML = '<strong>完整預習已獨立成頁：</strong><a href="todaiji.html">東大寺特別專頁</a>收錄三層重建史、華嚴思想、造像材料、27/8約2小時15至30分路線、3小時20分完整線、實景圖片、聲明與現場勾選模式。';
-      }
-    }
-
-    const isuien = naraVisit.querySelector('#isuien');
-    if (isuien) {
-      const meta = isuien.querySelector('.museum-head .meta');
-      if (meta) meta.textContent = 'B線｜14:10–15:20 · 東大寺明顯擠迫時';
-      const grid = isuien.querySelector('.decision-grid');
-      if (grid) {
-        grid.innerHTML = '<div><strong>選擇條件</strong><span>東大寺團客明顯擠迫，約14:00立即轉往依水園</span></div><div><strong>路線</strong><span>前園 → 後園 → 寧樂美術館；其後只看東大寺外圍或直接回站</span></div><div><strong>硬時間</strong><span>16:00前入園；選此線後不再進東大寺各付費區</span></div>';
-      }
-    }
-  }
-
-  const sakaiDay = document.querySelector('#d0828');
-  if (sakaiDay) {
-    const tbody = sakaiDay.querySelector('table.schedule tbody');
-    if (tbody) {
-      tbody.innerHTML = `
-        <tr><td>10:30</td><td>大阪出發</td></tr>
-        <tr><td>11:30–12:15</td><td><a class="context-link museum-link" href="museums.html#risho">さかい利晶の杜</a>：45分鐘，以千利休與堺背景為主</td></tr>
-        <tr><td>12:15–12:25</td><td><a class="context-link map-link" href="maps.html#d0828">直接步行前往弥助</a>；不另排大道筋或千利休屋敷跡</td></tr>
-        <tr><td>12:30–13:30</td><td><a class="context-link food-link" href="food.html#yasuke">弥助</a></td></tr>
-        <tr><td>13:50–14:45</td><td><a class="context-link museum-link" href="museums.html#cut">堺伝匠館／堺刃物ミュージアム CUT</a></td></tr>
-        <tr><td>15:05–16:00</td><td><a class="context-link museum-link" href="museums.html#teppo">鉄炮鍛冶屋敷</a></td></tr>
-        <tr><td>16:00</td><td>由七道／高須神社離開</td></tr>
-        <tr><td>18:30</td><td><a class="context-link food-link" href="food.html#murakami">しまなみふれんち Murakami</a></td></tr>
-        <tr><td>22:30–00:00</td><td><a class="context-link food-link drink-link confirmed-link" href="food.html#santoku">ぽんしゅや 三徳六味 福島本店：日本酒二次會（予約済）</a></td></tr>`;
-    }
-
-    const priorities = sakaiDay.querySelector('.day-aside ul');
-    if (priorities) {
-      priorities.innerHTML = `
-        <li>10:30才由大阪出發；11:30入利晶之杜。</li>
-        <li>利晶之杜只預45分鐘，以千利休與堺商人文化為主；與謝野晶子按興趣略看。</li>
-        <li>12:15離館直接步行去弥助；不另排大道筋或千利休屋敷跡。</li>
-        <li>酷熱時，堺伝匠館至鍛冶屋敷改搭阪堺線；買刀不能影響15:05入館。</li>
-        <li>Murakami 後留約90分鐘緩衝；22:30再到福島三徳六味。</li>`;
-    }
-  }
-
-  const sakaiDeep = document.querySelector('#sakai');
-  if (sakaiDeep) {
-    const coreParagraph = Array.from(sakaiDeep.querySelectorAll('p')).find((paragraph) => {
-      const strong = paragraph.querySelector('strong');
-      return strong && strong.textContent.includes('今日核心');
-    });
-    if (coreParagraph) {
-      coreParagraph.innerHTML = '<strong>今日核心：</strong>10:30由大阪出發，11:30入利晶之杜，只用45分鐘集中看千利休與堺商人茶湯的關係；與謝野晶子展示按興趣略看。12:15離館後直接步行到弥助，取消大道筋及千利休屋敷跡的獨立散步。午後再一路向北到堺伝匠館與鉄炮鍛冶屋敷；18:30 Murakami，22:30福島三徳六味均維持。';
-    }
-
-    const decisionGrid = sakaiDeep.querySelector('.decision-grid');
-    if (decisionGrid) {
-      decisionGrid.innerHTML = `
-        <div><strong>必留</strong><span>12:30弥助、堺伝匠館、鉄炮鍛冶屋敷、18:30 Murakami、22:30三徳六味</span></div>
-        <div><strong>可縮</strong><span>利晶之杜固定45分鐘；與謝野晶子展示只作快速補充</span></div>
-        <div><strong>硬時間</strong><span>10:30大阪出發；11:30–12:15利晶；12:30入席；15:05鍛冶屋敷；22:30福島預約</span></div>`;
-    }
-  }
-
-  const sakaiVisit = document.querySelector('#sakai-visit');
-  if (sakaiVisit) {
-    const risho = sakaiVisit.querySelector('#risho');
-    if (risho) {
-      const meta = risho.querySelector('.museum-head .meta');
-      if (meta) meta.textContent = '11:30–12:15 · 45分鐘快看，以千利休為主';
-
-      const grid = risho.querySelector('.decision-grid');
-      if (grid) {
-        grid.innerHTML = '<div><strong>45分鐘分配</strong><span>利休與堺城市背景25分鐘；茶室、陶瓷與VR約10分鐘；與謝野晶子／企劃展合計5–7分鐘；離館3–5分鐘</span></div><div><strong>離開</strong><span>12:15準時離館，直接步行約5分鐘往弥助；不另排大道筋或千利休屋敷跡。</span></div><div><strong>相關頁面</strong><span><a href="daily.html#d0828">28/8行程</a> · <a href="culture.html#sakai">堺文化線</a> · <a href="maps.html#d0828">當日地圖</a></span></div>';
-      }
-    }
-  }
-
-  const sakaiMap = document.querySelector('.map-card#d0828');
-  if (sakaiMap) {
-    const meta = sakaiMap.querySelector('.meta');
-    if (meta) meta.textContent = '11:30利晶之杜 → 12:30弥助；午後一路向北';
-
-    sakaiMap.querySelectorAll('.route-steps li').forEach((item) => {
-      if (item.textContent.includes('千利休屋敷跡') || item.textContent.includes('大道筋')) {
-        item.remove();
-      }
-    });
-  }
-
-  if (sakaiDay || sakaiDeep || sakaiVisit || sakaiMap) {
-    const updated = document.querySelector('.footer .updated');
-    if (updated) updated.textContent = '行程同步：2026-08-27';
-  }
-
-  const kobeDay = document.querySelector('#d0830');
-  if (kobeDay) {
-    const tbody = kobeDay.querySelector('table.schedule tbody');
-    if (tbody) {
-      const rows = Array.from(tbody.querySelectorAll('tr'));
-      if (rows[0]) rows[0].querySelector('td').textContent = '10:00–11:00';
-      if (rows[1]) rows[1].querySelector('td').textContent = '11:00–12:00';
-      if (rows[2]) {
-        rows[2].querySelector('td').textContent = '12:00–12:25';
-        const detail = rows[2].querySelectorAll('td')[1];
-        if (detail) detail.innerHTML = '<a class="context-link map-link" href="maps.html#d0830">步行前往日月</a>：實走約20–25分鐘，12:25前到店，留約5分鐘報到';
-      }
-    }
-    const priorities = kobeDay.querySelector('.day-aside ul');
-    if (priorities) {
-      const items = Array.from(priorities.querySelectorAll('li'));
-      const oldTakenaka = items.find((item) => item.textContent.includes('竹中'));
-      if (oldTakenaka) oldTakenaka.textContent = '竹中約60分鐘，只看常設展重點；12:00直接步行往日月。';
-    }
-  }
-
-  const kobeDeep = document.querySelector('#kobe');
-  if (kobeDeep) {
-    const coreParagraph = Array.from(kobeDeep.querySelectorAll('p')).find((paragraph) => {
-      const strong = paragraph.querySelector('strong');
-      return strong && strong.textContent.includes('今日核心');
-    });
-    if (coreParagraph) {
-      coreParagraph.innerHTML = '<strong>今日核心：</strong>10:00由酒店出發，竹中大工道具館11:00入館；集中看約60分鐘常設展後，12:00直接步行往中山手通午餐。下午由魚崎起步，沿海岸由東向西走菊正宗、白鶴、福寿，移動上不再折返；17:30由石屋川返回三宮晚餐。';
-    }
-
-    const rhythmParagraph = Array.from(kobeDeep.querySelectorAll('p')).find((paragraph) => {
-      const strong = paragraph.querySelector('strong');
-      return strong && strong.textContent.includes('節奏');
-    });
-    if (rhythmParagraph) {
-      rhythmParagraph.innerHTML = '<strong>節奏：</strong>日月12:30是整天樞紐。12:00由竹中步行出發，實際路程約20–25分鐘，目標12:25前到店，留約5分鐘報到。福寿見學16:30–17:30是另一個硬節點；16:25前要到東明蔵報到。結束後只有55分鐘到エスピス，必須直接步行往石屋川乘阪神線，18:30準時入席。';
-    }
-
-    const decisionGrid = kobeDeep.querySelector('.decision-grid');
-    if (decisionGrid) {
-      decisionGrid.innerHTML = `
-        <div><strong>必留</strong><span>竹中、菊正宗、白鶴、18:30晚餐</span></div>
-        <div><strong>已預約</strong><span>福寿16:30日語有料蔵見學；16:25前報到</span></div>
-        <div><strong>硬時間</strong><span>10:00出發；12:30午餐；17:30離酒心館；18:30晚餐</span></div>`;
-    }
-  }
-
-  const kobeMap = document.querySelector('.map-card#d0830');
-  if (kobeMap) {
-    const meta = kobeMap.querySelector('.meta');
-    if (meta) meta.textContent = '10:00大阪出發；灘五鄉由東向西';
-    const routeButton = kobeMap.querySelector('.map-actions a[href*="destination=竹中大工道具館"]');
-    if (routeButton) routeButton.textContent = '10:00 酒店 → 竹中';
-  }
-
-  if (kobeDay || kobeDeep || kobeMap) {
-    const updated = document.querySelector('.footer .updated');
-    if (updated) updated.textContent = '行程同步：2026-08-30';
-  }
-
-  const todaijiPage = document.querySelector('.todaiji-page');
-  if (todaijiPage) {
-    const statusHeading = todaijiPage.querySelector('#visit-status .section-heading');
-    if (statusHeading) {
-      const title = statusHeading.querySelector('h2');
-      const intro = statusHeading.querySelector('p');
-      if (title) title.textContent = '8月27日按人流二選一';
-      if (intro) intro.textContent = '東大寺線由14:00東大寺ミュージアム起計，主要參觀至約16:15；連同排隊與稍慢觀看，可用至16:30。依水園只在人流明顯擠迫時替代。';
-    }
-
-    const conflict = todaijiPage.querySelector('#visit-status .route-conflict');
-    if (conflict) {
-      conflict.innerHTML = `
-        <div><span class="status-dot"></span><strong>東大寺線：14:00–16:15</strong><p>由ミュージアム開始，連南大門、大佛殿、法華堂與二月堂，實際可用約2小時15至30分。</p></div>
-        <div><span class="status-dot amber"></span><strong>依水園線：14:10–15:20</strong><p>只在東大寺團客明顯擠迫時改行；選定後不再趕回各付費堂區。</p></div>
-        <div class="route-verdict"><span>現行判斷</span><strong>若選東大寺，當日下午集中走完整主線，約16:15開始回近鐵奈良站；依水園留作替代方案。</strong></div>`;
-    }
-
-    const routeHeading = todaijiPage.querySelector('#routes .section-heading p');
-    if (routeHeading) routeHeading.textContent = '27/8現行線由博物館開始，約2小時15至30分；3小時20分版供日後專程完整考察。';
-
-    const compactButton = todaijiPage.querySelector('[data-route-select="compact"]');
-    if (compactButton) compactButton.textContent = '27/8 · 約2小時15至30分';
-
-    const compactPanel = todaijiPage.querySelector('[data-route-panel="compact"]');
-    if (compactPanel) {
-      compactPanel.innerHTML = `
-        <div class="route-summary"><strong>適用前提</strong><span>14:00由東大寺ミュージアム開始，16:15左右完成二月堂，之後步行回近鐵奈良站。</span><span class="route-warning">法華堂16:00關門，15:50前必須離堂；排隊較長時先壓縮博物館至25分鐘，再縮短二月堂外部停留。</span></div>
-        <ol class="field-route" id="field-route">
-          <li><time>14:00–14:30</time><div><strong>東大寺ミュージアム</strong><span>集中看當期寺寶、盧舍那佛與重建材料；略過一般年表。</span></div></li>
-          <li><time>14:30–14:42</time><div><strong>南大門</strong><span>先看門內通高與貫材，再由吽形側面看扭轉與木塊接合。</span></div></li>
-          <li><time>14:42–14:50</time><div><strong>走向大佛殿</strong><span>保留中軸視線，不在鹿群停留。</span></div></li>
-          <li><time>14:50–15:20</time><div><strong>大佛殿</strong><span>八角燈籠 → 中軸 → 側面 → 蓮座；先看尺度，再看跨年代修補。</span></div></li>
-          <li><time>15:20–15:30</time><div><strong>上坡往法華堂</strong><span>補水；鐘樓只從路上看。</span></div></li>
-          <li><time>15:30–15:50</time><div><strong>法華堂</strong><span>不空羂索觀音整體、寶冠反光、不同材料表面與群像站位。</span></div></li>
-          <li><time>15:50–16:15</time><div><strong>二月堂</strong><span>舞台、樓梯與修二會空間；16:15左右開始下山回站。</span></div></li>
-        </ol>`;
-    }
-
-    const checklist = todaijiPage.querySelector('#field-checklist .field-checklist');
-    if (checklist) {
-      checklist.innerHTML = `
-        <article data-field-stop="museum"><div><span>01</span><h3>ミュージアム</h3><em>30分鐘</em></div><label><input type="checkbox"> 當期寺寶與原位置</label><label><input type="checkbox"> 木、銅、漆與泥的差異</label><label><input type="checkbox"> 只讀必要重建背景</label><p>14:30離館往南大門</p></article>
-        <article data-field-stop="nandaimon"><div><span>02</span><h3>南大門</h3><em>12分鐘</em></div><label><input type="checkbox"> 門內通高與貫材</label><label><input type="checkbox"> 吽形側面扭轉</label><label><input type="checkbox"> 木塊拼接與低光</label><p>下一站：大佛殿 · 約8分鐘</p></article>
-        <article data-field-stop="daibutsuden"><div><span>03</span><h3>大佛殿</h3><em>30分鐘</em></div><label><input type="checkbox"> 八角燈籠音聲菩薩</label><label><input type="checkbox"> 三段距離看尺度</label><label><input type="checkbox"> 蓮座與修補接縫</label><p>可拍；禁三腳架、寫生、電筒</p></article>
-        <article data-field-stop="hokkedo"><div><span>04</span><h3>法華堂</h3><em>20分鐘</em></div><label><input type="checkbox"> 天平正堂／鎌倉禮堂</label><label><input type="checkbox"> 八臂與寶冠碎亮</label><label><input type="checkbox"> 三種材料表面</label><p>15:50前離堂；堂內禁拍</p></article>
-        <article data-field-stop="nigatsudo"><div><span>05</span><h3>二月堂</h3><em>25分鐘</em></div><label><input type="checkbox"> 舞台與樓梯</label><label><input type="checkbox"> 儀式人流方向</label><label><input type="checkbox"> 奈良盆地與寺院地理</label><p>約16:15下山回近鐵奈良站</p></article>`;
-    }
-
-    const updated = todaijiPage.querySelector('.footer .updated');
-    if (updated) updated.textContent = '行程同步：2026-07-24';
-  }
-
-  if ((document.querySelector('#nara-visit #todaiji') || document.body.classList.contains('todaiji-page')) && !document.querySelector('script[src*="todaiji-quick-read.js"]')) {
-    const quickReadScript = document.createElement('script');
-    quickReadScript.src = 'assets/todaiji-quick-read.js?v=20260724-1';
-    quickReadScript.defer = true;
-    document.head.appendChild(quickReadScript);
-  }
-
-  document.body.id = document.body.id || 'top';
-  document.querySelectorAll('main > .section, main > .deep-day').forEach((section) => {
-    const container = section.querySelector(':scope > .wrap') || section;
-    if (container.querySelector(':scope > .back-to-top')) return;
-    const row = document.createElement('p');
-    row.className = 'back-to-top';
-    const link = document.createElement('a');
-    link.href = '#top';
-    link.setAttribute('aria-label', '返回頁首');
-    link.textContent = '回頁首 ↑';
-    row.appendChild(link);
-    container.appendChild(row);
-  });
-
-  const setupOfflineControls = async () => {
-    if (!('serviceWorker' in navigator) || !window.location.protocol.startsWith('http')) return;
-
-    const footer = document.querySelector('.footer .footer-grid');
-    const mobileTools = document.querySelector('.mobile-tools');
-    const status = document.createElement('span');
-    status.className = 'offline-status';
-    status.setAttribute('role', 'status');
-    status.setAttribute('aria-live', 'polite');
-    status.textContent = navigator.onLine ? '離線版已備妥' : '現正使用離線版';
-
-    const makeButton = (mobile = false) => {
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.className = mobile ? 'offline-update mobile-update' : 'offline-update';
-      button.textContent = mobile ? '更新' : '更新內容';
-      button.setAttribute('aria-label', '更新離線內容');
-      return button;
-    };
-
-    const buttons = [];
-    if (footer) {
-      const control = document.createElement('div');
-      control.className = 'offline-control';
-      const button = makeButton();
-      buttons.push(button);
-      control.append(button, status);
-      footer.appendChild(control);
-    }
-    if (mobileTools) {
-      const button = makeButton(true);
-      buttons.push(button);
-      mobileTools.appendChild(button);
-    }
-
-    let registration;
-    try {
-      registration = await navigator.serviceWorker.register('sw.js');
-      await navigator.serviceWorker.ready;
-    } catch (_) {
-      status.textContent = '未能啟用離線版';
-      buttons.forEach((button) => { button.disabled = true; });
-      return;
-    }
-
-    const activateWaitingWorker = async () => {
-      if (!registration.waiting) return;
-      const changed = new Promise((resolve) => {
-        navigator.serviceWorker.addEventListener('controllerchange', resolve, { once: true });
-      });
-      registration.waiting.postMessage({ type: 'SKIP_WAITING' });
-      await changed;
-    };
-
-    const updateContent = async () => {
-      if (!navigator.onLine) {
-        status.textContent = '目前離線，已保留原有內容';
-        return;
-      }
-
-      buttons.forEach((button) => {
-        button.disabled = true;
-        button.textContent = '更新中…';
-      });
-      status.textContent = '正在下載完整新版';
-
-      try {
-        await activateWaitingWorker();
-        const worker = navigator.serviceWorker.controller || registration.active;
-        if (!worker) throw new Error('離線服務尚未就緒');
-
-        const result = await new Promise((resolve, reject) => {
-          const channel = new MessageChannel();
-          const timeout = setTimeout(() => reject(new Error('更新逾時')), 60000);
-          channel.port1.onmessage = ({ data }) => {
-            clearTimeout(timeout);
-            data?.ok ? resolve(data) : reject(new Error(data?.message || '更新失敗'));
-          };
-          worker.postMessage({ type: 'UPDATE_CONTENT' }, [channel.port2]);
-        });
-
-        status.textContent = `已更新至 ${result.version}`;
-        window.location.reload();
-      } catch (_) {
-        status.textContent = '更新失敗，已保留原有內容';
-        buttons.forEach((button) => {
-          button.disabled = false;
-          button.textContent = button.classList.contains('mobile-update') ? '重試' : '重新更新';
-        });
-      }
-    };
-
-    buttons.forEach((button) => button.addEventListener('click', updateContent));
-    window.addEventListener('offline', () => {
-      status.textContent = '現正使用離線版';
-      buttons.forEach((button) => { button.disabled = true; });
-    });
-    window.addEventListener('online', () => {
-      status.textContent = '已連線；按更新內容先下載新版';
-      buttons.forEach((button) => {
-        button.disabled = false;
-        button.textContent = button.classList.contains('mobile-update') ? '更新' : '更新內容';
-      });
-    });
+    document.body.appendChild(button);
   };
 
-  setupOfflineControls();
-
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupMobileBackButton, { once: true });
+  } else {
+    setupMobileBackButton();
+  }
 })();
