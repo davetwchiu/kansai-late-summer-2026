@@ -5,6 +5,37 @@
   coreScript.async = false;
   document.head.appendChild(coreScript);
 
+  const setupMapDateRibbon = () => {
+    const mapGrid = document.querySelector('.map-grid');
+    if (!mapGrid || document.querySelector('.map-date-ribbon')) return;
+
+    const style = document.createElement('style');
+    style.textContent = `
+      .map-date-ribbon{display:none}
+      @media(max-width:760px){
+        .map-date-ribbon{display:flex}
+      }
+      @media print{.map-date-ribbon{display:none!important}}
+    `;
+    document.head.appendChild(style);
+
+    const nav = document.createElement('nav');
+    nav.className = 'quick-nav map-date-ribbon';
+    nav.setAttribute('aria-label', '日期捷徑');
+    nav.innerHTML = [
+      ['#d0826', '26/8'],
+      ['#d0827', '27/8'],
+      ['#d0828', '28/8'],
+      ['#d0829', '29/8'],
+      ['#d0830', '30/8'],
+      ['#d0831', '31/8'],
+      ['#d0901', '1/9'],
+      ['#d0902', '2/9'],
+    ].map(([href, label]) => `<a href="${href}">${label}</a>`).join('');
+
+    mapGrid.parentNode.insertBefore(nav, mapGrid);
+  };
+
   const setupMobileBackButton = () => {
     if (document.querySelector('.mobile-back-button')) return;
 
@@ -59,9 +90,14 @@
     document.body.appendChild(button);
   };
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setupMobileBackButton, { once: true });
-  } else {
+  const setupPageEnhancements = () => {
+    setupMapDateRibbon();
     setupMobileBackButton();
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupPageEnhancements, { once: true });
+  } else {
+    setupPageEnhancements();
   }
 })();
